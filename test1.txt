@@ -1,3 +1,25 @@
+ID=ICA_5210
+1- To design and operated wastewater treatment process.
+
+2-Develop understanding of the physical, chemical and biological principles 
+and application of wastewater treatment.
+
+3-Understand and apply conventional techniques and engineering 
+methods for the design and operation of wastewater treatment plants.
+
+
+ID=ICC_3202
+1-Diagramar un diseño de componentes de un computador básico y 
+explicar su funcionamiento.
+
+2-Desarrollar un software de mediana complejidad utilizando lenguaje de 
+máquina.
+
+3-Explicar las diferencias entre distintas arquitecturas de computadores, 
+detallando las implicancias de sus componentes, tales como la memoria, 
+los buses, y los elementos de entrada y salida entre otros.
+
+
 ID=ICC_5150
 1-Describir las responsabilidades que cumple un director de proyectos en 
 el contexto de la ejecución de un proyecto de software.
@@ -8,61 +30,5 @@ de software.
 3-Aplicar un Plan de Gestión de Proyectos de desarrollo de software 
 considerando cada una de las fases del proyecto, y para los diferentes 
 aspectos que controla.
-
-ID=ICC_3202
-1-Diagramar un diseño de componentes de un computador básico y 
-explicar su funcionamiento.
-
-2-Desarrollar un software de mediana complejidad utilizando lenguaje de 
-máquina.
-
-3-Explicar las diferencias entre distintas arquitecturas de computadores, 
-detallando las implicancias de sus componentes, tales como la memoria, 
-los buses, y los elementos de entrada y salida entre otros.
-
-ID=ICC_3202
-1-Diagramar un diseño de componentes de un computador básico y 
-explicar su funcionamiento.
-
-2-Desarrollar un software de mediana complejidad utilizando lenguaje de 
-máquina.
-
-3-Explicar las diferencias entre distintas arquitecturas de computadores, 
-detallando las implicancias de sus componentes, tales como la memoria, 
-los buses, y los elementos de entrada y salida entre otros.
-
-
-ID=ICC_3202
-1-Diagramar un diseño de componentes de un computador básico y 
-explicar su funcionamiento.
-
-2-Desarrollar un software de mediana complejidad utilizando lenguaje de 
-máquina.
-
-3-Explicar las diferencias entre distintas arquitecturas de computadores, 
-detallando las implicancias de sus componentes, tales como la memoria, 
-los buses, y los elementos de entrada y salida entre otros.
-
-
-ID=ICC_3202
-1-Diagramar un diseño de componentes de un computador básico y 
-explicar su funcionamiento.
-
-2-Desarrollar un software de mediana complejidad utilizando lenguaje de 
-máquina.
-
-3-Explicar las diferencias entre distintas arquitecturas de computadores, 
-detallando las implicancias de sus componentes, tales como la memoria, 
-los buses, y los elementos de entrada y salida entre otros.
-
-
-ID=ICA_5210
-1- To design and operated wastewater treatment process.
-
-2-Develop understanding of the physical, chemical and biological principles 
-and application of wastewater treatment.
-
-3-Understand and apply conventional techniques and engineering 
-methods for the design and operation of wastewater treatment plants.
 
 
