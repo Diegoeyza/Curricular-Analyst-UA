@@ -2,23 +2,46 @@ import PyPDF2
 import re
 import os
 
-import PyPDF2
-import re
-import os
-
 def extract_course_name(pdf_path):
     with open(pdf_path, 'rb') as file:
         reader = PyPDF2.PdfReader(file)
         first_page_text = reader.pages[0].extract_text()
+        
         # Extract the course name by looking for the pattern before " - ICA"
-        # Adjusted regex to handle possible leading text and various spacing
-        match = re.search(r'^(.+?)\s+- ICA \d+', first_page_text, re.DOTALL)
+        match = re.search(r'^(.+?)\s+- \w+ \d+', first_page_text, re.DOTALL)
         if match:
             course_name = match.group(1).strip()
             # Remove newlines and extra spaces
             course_name = re.sub(r'\s+', ' ', course_name)
             return course_name
         return "Course name not found."
+
+def extract_requisitos(pdf_path):
+    with open(pdf_path, 'rb') as file:
+        reader = PyPDF2.PdfReader(file)
+        text = ""
+        for page_num, page in enumerate(reader.pages):
+            page_text = page.extract_text()
+            text += page_text
+
+        # Extract the section starting with "Requisitos / Aprendizajes previos:"
+        match = re.search(r'Requisitos / Aprendizajes previos: (.+?)(?:Información de la asignatura|$)', text, re.DOTALL)
+        if match:
+            requisitos_text = match.group(1).strip()
+
+            # Extract IDs and Names from the requisitos_text
+            ids = re.findall(r'\b(?:IC[A-Z]|ING|IOC)-\d+', requisitos_text)
+            names = re.findall(r'([A-ZÁÉÍÓÚÑ\s]+?)(?: \((?:IC[A-Z]|ING|IOC)-\d+\))', requisitos_text)
+
+            # Replace newlines with spaces in names
+            names = [name.replace('\n', ' ').strip() for name in names]
+
+            # Format the IDs and Names
+            ids_str = '; '.join(ids)
+            names_str = '; '.join(names)
+            
+            return ids_str, names_str
+        return "IDs not found", "Names not found"
 
 def extract_learning_objectives(pdf_path, file_id):
     with open(pdf_path, 'rb') as file:
@@ -81,19 +104,27 @@ def process_pdfs_in_folder(folder_path, output_file):
 
                 course_name = extract_course_name(pdf_path)
                 objectives = extract_learning_objectives(pdf_path, file_id)
+                requisitos_ids, requisitos_names = extract_requisitos(pdf_path)
 
                 # Format the ID and course name
-                output_text = f"ID={file_id}\nNombre={course_name}\n" + objectives
+                output_text = (
+                    f"ID={file_id}\n"
+                    f"Nombre={course_name}\n"
+                    f"{objectives}\n"
+                    f"ID Requisitos: {requisitos_ids}\n"
+                    f"Nombre Requisitos: {requisitos_names}"
+                )
 
-                # Separate each pdf written in the txt
+                # Separate each PDF written in the txt
                 file1.write(output_text + "\n\n\n")
                 print(f"Finished processing {filename}.\n")
 
 # Specify the folder containing the PDFs and the output file
-folder_path = r"D:\Test practica"
+folder_path = r"D:\Archivos practica pre prof"
 output_file = "test1.txt"
 
 process_pdfs_in_folder(folder_path, output_file)
+
 
 
 
