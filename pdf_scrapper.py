@@ -36,12 +36,16 @@ def extract_requisitos(pdf_path):
             # Replace newlines with spaces in names
             names = [name.replace('\n', ' ').strip() for name in names]
 
+            # Replace hyphens with underscores in IDs
+            ids = [id_.replace('-', '_') for id_ in ids]
+
             # Format the IDs and Names
             ids_str = '; '.join(ids)
             names_str = '; '.join(names)
             
             return ids_str, names_str
         return "IDs not found", "Names not found"
+
 
 def extract_learning_objectives(pdf_path, file_id):
     with open(pdf_path, 'rb') as file:

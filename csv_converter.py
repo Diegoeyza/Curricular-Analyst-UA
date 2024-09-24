@@ -1,5 +1,6 @@
 import csv
 import re
+import pandas as pd
 
 # Input file path (change this to your file path)
 input_file_path = "test2.txt"
@@ -83,3 +84,43 @@ print("Data successfully written to CSV files:")
 print(f"- {general_info_file}")
 print(f"- {objectives_info_file}")
 print(f"- {requirements_info_file}")
+
+requirements_df = pd.read_csv(requirements_info_file)  # This file contains ID, ID_Requisito, Nombre_Requisito
+
+# Print the data before filtering for debugging
+print("Requirements Data Before Filtering:")
+print(requirements_df)
+
+# Filter out rows where 'ID_Requisito' or 'Nombre_Requisito' contains "not found"
+requirements_df = requirements_df[~requirements_df['ID_Requisito'].str.strip().str.contains("not found", case=False, na=False)]
+requirements_df = requirements_df[~requirements_df['Nombre_Requisito'].str.strip().str.contains("not found", case=False, na=False)]
+
+# Print the filtered data for debugging
+print("Filtered Requirements Data:")
+print(requirements_df)
+
+# Save the filtered DataFrame back to the requirements_info_file
+requirements_df.to_csv(requirements_info_file, index=False)
+
+# Read general_info_file
+general_df = pd.read_csv(general_info_file)  # This file contains ID, Nombre
+
+# Step 1: Swap columns in requisitos_df
+requirements_df = requirements_df.rename(columns={'ID_Requisito': 'ID1'})
+
+# Step 2: Merge with general_df to get the related names
+result_df = pd.merge(requirements_df, general_df, on='ID', how='left')
+
+# Renaming columns again to avoid merge issues
+result_df = result_df.rename(columns={'ID1': 'ID', 'ID': 'ID_Dependencia'})
+
+# Step 3: Rename the 'Nombre' column to 'Dependencia'
+result_df = result_df.rename(columns={'Nombre': 'Dependencia'})
+
+# Step 4: Select only the necessary columns
+final_df = result_df[['ID', 'ID_Dependencia', 'Dependencia']]
+
+# Step 5: Save the result to a new CSV file
+final_df.to_csv('dependencies.csv', index=False)
+
+print(f"- dependencies.csv")
