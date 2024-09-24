@@ -1,5 +1,16 @@
 import pandas as pd
 
+def converter(filename):
+    # Read the CSV file
+    df = pd.read_csv(filename, sep=';', header=None)
+
+    # Fill empty cells in the first two columns with the value above them
+    df[0] = df[0].ffill()
+    df[1] = df[1].ffill()
+
+    # Save the modified DataFrame back to a CSV
+    df.to_csv(filename, sep=';', header=False, index=False)
+
 # Load the CSV, assuming no header and separating by semicolons
 df = pd.read_csv(r'data_CA\horario.csv', header=None, sep=';')
 
@@ -16,3 +27,6 @@ first_part.to_csv('first_part.csv', index=False, header=False, sep=';')
 second_part.to_csv('second_part.csv', index=False, header=False, sep=';')
 
 print("CSV files created: first_part.csv and second_part.csv")
+
+converter('first_part.csv')
+converter('schedule_output.csv')
