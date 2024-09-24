@@ -3,7 +3,7 @@ import re
 import pandas as pd
 
 # Input file path (change this to your file path)
-input_file_path = "test2.txt"
+input_file_path = "Extracted_text.txt"
 
 # Read the input data from the file
 with open(input_file_path, 'r', encoding='utf-8') as file:

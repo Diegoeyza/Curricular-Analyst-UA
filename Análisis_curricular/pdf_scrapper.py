@@ -125,7 +125,7 @@ def process_pdfs_in_folder(folder_path, output_file):
 
 # Specify the folder containing the PDFs and the output file
 folder_path = r"C:\Users\diego\OneDrive\Documentos\Pythonhw\.vs\Curricular_analyst_UA\data"
-output_file = "test2.txt"
+output_file = "Extracted_text.txt"
 
 process_pdfs_in_folder(folder_path, output_file)
 
