@@ -40,9 +40,6 @@ def csv_organizer(file, out):
                 for i in range(len(courses)):
                     # Construct the full course name for each entry
                     full_course_name = f"{base_course_name} {courseL[i]}"
-                    if (base_course_name=="Ecuaciones Diferenciales (AYU) SEC"):
-                        print(courseL)
-
                     # Check if the course should have the next time interval
                     if final_intervalo is None and index + 1 < len(df):
                         next_row = df.iloc[index + 1]
@@ -67,4 +64,4 @@ def csv_organizer(file, out):
 
     print(f"Data has been saved to {output_file}")
 
-csv_organizer("first_part.csv", "filled.csv")
+#csv_organizer("first_part.csv", "filled.csv")

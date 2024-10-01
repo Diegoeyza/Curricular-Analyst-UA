@@ -6,11 +6,7 @@ def find(data_find, data_to_find, used, pos):
         if ((data_find["name"][i] == data_to_find["TITULO"][pos]) and 
             (i not in used) and 
             (data_find["section"][i] == data_to_find["SECC."][pos]) and 
-            (data_find["type"][i][0:3] == data_to_find["TIPO DE REUNIÓN"][pos][0:3])):
-            if(data_find["name"][i]=="Fundamentos de Economía"):
-                print ("found")
-                print(f"{i}:{pos}")
-            
+            (data_find["type"][i][0:3] == data_to_find["TIPO DE REUNIÓN"][pos][0:3])):         
             return i
     return -1
 
@@ -59,4 +55,4 @@ def combine(fill, data, out):
 
     print(f"Data has been saved to {out}")
 
-combine(r"data_CA\Programación Maestro Macro segunda parte.csv","separated_schedule.csv","final.csv")
+#combine(r"data_CA\Programación Maestro Macro segunda parte.csv","separated_schedule.csv","final.csv")
