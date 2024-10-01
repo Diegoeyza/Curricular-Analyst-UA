@@ -4,6 +4,7 @@ from organizer import csv_organizer
 from merger import merger
 from separator import separator
 from combiner import combine
+import os
 
 def converter(filename):
     # Read the CSV file with UTF-8 encoding
@@ -64,4 +65,11 @@ def convert_row(horario, programación):
         separator("lab_merged_schedule.csv", "lab_separated_schedule.csv")
         combine(programación,"lab_separated_schedule.csv","final.csv")
 
-convert_row(r'data_CA\horario.csv',r"data_CA\Programación Maestro Macro segunda parte.csv")
+def process_folder(folder,destination):
+    # Iterate through each file in the specified folder
+    for root, dirs, files in os.walk(folder):
+        for file in files:
+            # Get the full path of the file
+            file_path = os.path.join(root, file)
+            print(f"Processing {file_path}\n")
+            convert_row(file_path,destination)

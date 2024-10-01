@@ -54,5 +54,4 @@ def combine(fill, data, out):
     df_final.to_csv(out, sep=';', index=False, encoding='utf-8')
 
     print(f"Data has been saved to {out}")
-
 #combine(r"data_CA\Programación Maestro Macro segunda parte.csv","separated_schedule.csv","final.csv")
