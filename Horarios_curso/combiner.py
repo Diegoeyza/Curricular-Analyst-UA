@@ -1,12 +1,14 @@
 import pandas as pd
-from datetime import datetime, timedelta
+import os
 
 def find(data_find, data_to_find, used, pos):
     for i in range(len(data_find)):
-        if ((data_find["name"][i].lower() == data_to_find["TITULO"][pos].lower()) and 
+        print(data_find["type"][i][0:3])
+        if ((data_find["name"][i] == data_to_find["TITULO"][pos]) and 
             (i not in used) and 
             (data_find["section"][i] == data_to_find["SECC."][pos]) and 
-            (data_find["type"][i] == data_to_find["TIPO DE REUNIÓN"][pos])):
+            (data_find["type"][i][0:3] == data_to_find["TIPO DE REUNIÓN"][pos][0:3])):
+            
             return i
     return -1
 
@@ -28,8 +30,13 @@ def combine(fill, data, out):
             used.append(idx)
             used2.append(i)
 
-    # Create a copy of df1 to fill in the data
-    df_final = df1.copy()
+    # Check if the output file exists
+    if os.path.exists(out):
+        # Load existing final.csv file if it exists
+        df_final = pd.read_csv(out, sep=';', encoding='utf-8')
+    else:
+        # Create a new DataFrame based on df1 if final.csv doesn't exist
+        df_final = df1.copy()
 
     # Ensure the columns DIA, INICIO, and FIN are of string type
     df_final['DIA'] = df_final['DIA'].astype(str)
@@ -45,8 +52,5 @@ def combine(fill, data, out):
     # Replace NaN values with the string "NULL"
     df_final = df_final.replace({pd.NA: 'NULL', 'nan': 'NULL', None: 'NULL'})
 
-    # Save the final DataFrame to a CSV file with UTF-8 encoding
+    # Save the final DataFrame back to the CSV file, preserving existing data
     df_final.to_csv(out, sep=';', index=False, encoding='utf-8')
-
-# Example usage
-combine(r"data_CA\Programación Maestro Macro segunda parte.csv", "separated_schedule.csv", "final.csv")

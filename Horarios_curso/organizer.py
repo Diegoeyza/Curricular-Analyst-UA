@@ -12,6 +12,7 @@ def csv_organizer(file, out):
     output_data = []
 
     # Extract course data
+    courses_L=[]
     for index, row in df.iterrows():
         # Get the current time slot using .iloc
         inicio_intervalo = row.iloc[0]
@@ -19,16 +20,23 @@ def csv_organizer(file, out):
 
         for day in df.columns[2:]:  # Skip the first two columns which are times
             course = row[day]
+            courseL=[]
             if pd.notna(course) and course != "":
                 # Split courses by commas and create entries
+                splitted=course.split(",")
+                for i in range(0,len(splitted)):
+                    if (i==0):
+                        courseL.append(splitted[i][-1])
+                    else:
+                        courseL.append(splitted[i])
                 courses = [c.strip() for c in course.split(',')]
-                
+
                 # Extract the base course name (e.g., PROGRAMACION (LAB) SEC)
                 base_course_name = " ".join(courses[0].split()[:-1])  # Assuming the last part is the SEC number
 
                 for i in range(len(courses)):
                     # Construct the full course name for each entry
-                    full_course_name = f"{base_course_name} {i + 1}"
+                    full_course_name = f"{base_course_name} {courseL[i]}"
 
                     # Check if the course should have the next time interval
                     if final_intervalo is None and index + 1 < len(df):
