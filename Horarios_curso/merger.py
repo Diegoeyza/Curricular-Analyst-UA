@@ -64,3 +64,5 @@ def merger(file,out):
     merged_df.to_csv(out, sep=';', index=False)
 
     print(f"Merging complete. The merged schedule is saved as {out}.")
+
+#merger("filled.csv", "merged_schedule.csv")

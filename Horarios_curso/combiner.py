@@ -3,11 +3,13 @@ import os
 
 def find(data_find, data_to_find, used, pos):
     for i in range(len(data_find)):
-        print(data_find["type"][i][0:3])
         if ((data_find["name"][i] == data_to_find["TITULO"][pos]) and 
             (i not in used) and 
             (data_find["section"][i] == data_to_find["SECC."][pos]) and 
             (data_find["type"][i][0:3] == data_to_find["TIPO DE REUNIÓN"][pos][0:3])):
+            if(data_find["name"][i]=="Fundamentos de Economía"):
+                print ("found")
+                print(f"{i}:{pos}")
             
             return i
     return -1
@@ -46,11 +48,15 @@ def combine(fill, data, out):
     # Fill the DIA, INICIO, FIN columns in df_final using the corresponding data from df2
     for i in range(len(used)):
         df_final.at[used2[i], 'DIA'] = str(df2.at[used[i], 'day'])
-        df_final.at[used2[i], 'INICIO'] = str(df2.at[used[i], 'interval_start'])
-        df_final.at[used2[i], 'FIN'] = str(df2.at[used[i], 'interval_end'])
+        df_final.at[used2[i], 'INICIO'] = str(df2.at[used[i], 'interval_start'])[:-3]
+        df_final.at[used2[i], 'FIN'] = str(df2.at[used[i], 'interval_end'])[:-3]
 
     # Replace NaN values with the string "NULL"
     df_final = df_final.replace({pd.NA: 'NULL', 'nan': 'NULL', None: 'NULL'})
 
     # Save the final DataFrame back to the CSV file, preserving existing data
     df_final.to_csv(out, sep=';', index=False, encoding='utf-8')
+
+    print(f"Data has been saved to {out}")
+
+combine(r"data_CA\Programación Maestro Macro segunda parte.csv","separated_schedule.csv","final.csv")

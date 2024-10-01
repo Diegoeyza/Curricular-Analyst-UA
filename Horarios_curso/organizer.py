@@ -26,9 +26,12 @@ def csv_organizer(file, out):
                 splitted=course.split(",")
                 for i in range(0,len(splitted)):
                     if (i==0):
-                        courseL.append(splitted[i][-1])
+                        if (splitted[i][-1]==" "):
+                            courseL.append(splitted[i][-2])
+                        else:
+                            courseL.append(splitted[i][-1])
                     else:
-                        courseL.append(splitted[i])
+                        courseL.append(splitted[i][0])
                 courses = [c.strip() for c in course.split(',')]
 
                 # Extract the base course name (e.g., PROGRAMACION (LAB) SEC)
@@ -37,6 +40,8 @@ def csv_organizer(file, out):
                 for i in range(len(courses)):
                     # Construct the full course name for each entry
                     full_course_name = f"{base_course_name} {courseL[i]}"
+                    if (base_course_name=="Ecuaciones Diferenciales (AYU) SEC"):
+                        print(courseL)
 
                     # Check if the course should have the next time interval
                     if final_intervalo is None and index + 1 < len(df):
@@ -61,3 +66,5 @@ def csv_organizer(file, out):
     output_df.to_csv(output_file, sep=';', index=False, encoding='utf-8')
 
     print(f"Data has been saved to {output_file}")
+
+csv_organizer("first_part.csv", "filled.csv")

@@ -22,3 +22,5 @@ def separator(file,out):
     df.to_csv(out, sep=';', index=False)
 
     print(f"Separation complete. The modified schedule is saved as {out}.")
+
+#separator("merged_schedule.csv", "separated_schedule.csv")

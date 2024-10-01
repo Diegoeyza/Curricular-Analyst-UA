@@ -2,3 +2,4 @@ venv
 *.txt
 *.csv
 *.pdf
+*.pyc
