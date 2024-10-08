@@ -10,9 +10,10 @@ def find(data_find, data_to_find, used, pos):
             return i
     return -1
 
-def combine(fill, data, out):
+def combine(fill, data, out, unmatched_txt):
     used = []
     used2 = []
+    unmatched_entries = []  # List to keep track of unmatched entries
     
     # Load the CSV files
     df1 = pd.read_csv(fill, sep=';')  # file with TITULO, SECC., etc.
@@ -27,6 +28,14 @@ def combine(fill, data, out):
         if idx != -1:
             used.append(idx)
             used2.append(i)
+
+    # Collect unmatched entries from df2
+    for i in range(len(df2)):
+        if i not in used:
+            unmatched_entries.append(df2.at[i, 'name']+ "\nSección="+ str((df2.at[i, 'section']))+ "\nTipo="+ str(df2.at[i, 'type']))  # Only save the name
+
+    # Remove duplicates by converting the list to a set, then back to a list
+    unmatched_entries = list(set(unmatched_entries))
 
     # Check if the output file exists
     if os.path.exists(out):
@@ -53,5 +62,25 @@ def combine(fill, data, out):
     # Save the final DataFrame back to the CSV file, preserving existing data
     df_final.to_csv(out, sep=';', index=False, encoding='utf-8')
 
+    # Determine the starting index for the unmatched entries in the text file
+    start_index = 1
+    if os.path.exists(unmatched_txt):
+        with open(unmatched_txt, 'r', encoding='utf-8') as f:
+            # Read existing lines to find the last entry number
+            lines = f.readlines()
+            if lines:
+                # Get the last entry number from the last line
+                last_line = lines[-5].strip().strip(':')
+                if last_line.startswith("Entry"):
+                    start_index = int(last_line.split()[1]) + 1  # Increment for new entries
+
+    # Write unmatched (deduplicated) entries to a text file in append mode
+    with open(unmatched_txt, 'a', encoding='utf-8') as f:
+        for idx, entry in enumerate(unmatched_entries, start=start_index):
+            f.write(f"Entry {idx}:\n{entry}\n\n")
+
     print(f"Data has been saved to {out}")
-#combine(r"data_CA\Programación Maestro Macro segunda parte.csv","separated_schedule.csv","final.csv")
+    print(f"Unmatched entries have been saved to {unmatched_txt}")
+
+# Call the combine function with the appropriate arguments
+# combine(r"data_CA\Programación Maestro Macro segunda parte.csv", "separated_schedule.csv", "final.csv", "unmatched_entries.txt")

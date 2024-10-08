@@ -83,16 +83,30 @@ def convert_row(horario, programación):
     csv_organizer("first_part.csv", "filled.csv")
     merger("filled.csv", "merged_schedule.csv")
     separator("merged_schedule.csv", "separated_schedule.csv")
-    combine(programación,"separated_schedule.csv","final.csv")
+    combine(programación,"separated_schedule.csv","final.csv","missing_pairs.txt")
     xlsx_converter("final.csv","final_x.xlsx")
 
     if second:
         csv_organizer("laboratorios.csv", "lab_filled.csv")
         merger("lab_filled.csv", "lab_merged_schedule.csv")
         separator("lab_merged_schedule.csv", "lab_separated_schedule.csv")
-        combine(programación,"lab_separated_schedule.csv","final.csv")
+        combine(programación,"lab_separated_schedule.csv","final.csv","missing_pairs.txt")
+
+def delete_files(file_list):
+    for file_path in file_list:
+        try:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                print(f"Deleted: {file_path}")
+            else:
+                print(f"File not found: {file_path}")
+        except Exception as e:
+            print(f"Error deleting {file_path}: {e}")
 
 def process_folder(folder,destination):
+    delete_files(["filled.csv","final.csv","first_part.csv","merged_schedule.csv",
+    "separated_schedule.csv","final.csv","missing_pairs.txt","final_x.xlsx","laboratorios.csv","lab_filled.csv","lab_merged_schedule.csv","lab_separated_schedule.csv"])
+
     # Iterate through each file in the specified folder
     for root, dirs, files in os.walk(folder):
         for file in files:
@@ -100,5 +114,7 @@ def process_folder(folder,destination):
             file_path = os.path.join(root, file)
             print(f"\nProcessing {file_path}\n")
             convert_row(file_path,destination)
+    delete_files(["filled.csv","final.csv","first_part.csv","merged_schedule.csv",
+    "separated_schedule.csv","final.csv","laboratorios.csv","lab_filled.csv","lab_merged_schedule.csv","lab_separated_schedule.csv"])
 
 convert_row(r"extracted_CSV\Semestres IX, X y XI.csv",r"data_CA\Programación Maestro Macro segunda parte.csv")
