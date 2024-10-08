@@ -6,6 +6,32 @@ from separator import separator
 from combiner import combine
 import os
 
+
+def xlsx_converter(file,out):
+    # Path to the CSV file (this would be the file you have, using a placeholder here)
+    csv_file_path = file
+
+    # Reading the CSV file using the correct delimiter
+    df = pd.read_csv(csv_file_path, delimiter=';')
+
+    # Create a style function to apply red background for NULL values
+    def highlight_null(row):
+        # Check if the "DIA" value is NaN or 'NULL'
+        if pd.isna(row['DIA']) or row['DIA'] == 'NULL':
+            return ['background-color: red'] * len(row)  # Apply red to the entire row
+        else:
+            return [''] * len(row)  # No highlight for the row
+
+
+
+    # Applying the style to the DataFrame
+    styled_df = df.style.apply(highlight_null, axis=1)
+
+    # Saving the styled DataFrame to an Excel file
+    styled_df.to_excel(out, index=False, engine='openpyxl')
+
+
+
 def converter(filename):
     # Read the CSV file with UTF-8 encoding
     df = pd.read_csv(filename, sep=';', header=None, encoding='utf-8')
@@ -58,6 +84,7 @@ def convert_row(horario, programación):
     merger("filled.csv", "merged_schedule.csv")
     separator("merged_schedule.csv", "separated_schedule.csv")
     combine(programación,"separated_schedule.csv","final.csv")
+    xlsx_converter("final.csv","final_x.xlsx")
 
     if second:
         csv_organizer("laboratorios.csv", "lab_filled.csv")
