@@ -1,11 +1,18 @@
 import pandas as pd
 from datetime import datetime, timedelta
 
-def merger(file,out):
+def merger(file, out):
     # Load the CSV file
     df = pd.read_csv(file, sep=';')
 
     # Convert the time columns to datetime objects
+    if df['interval_start'][0][-3:] == ":00":
+        for i in range(len(df["interval_start"])):
+            # Use .loc to avoid chained assignment warning
+            df.loc[i, 'interval_start'] = df['interval_start'][i][:-3]
+            df.loc[i, 'interval_end'] = df['interval_end'][i][:-3]
+
+    # Convert the interval_start and interval_end columns to datetime.time objects
     df['interval_start'] = pd.to_datetime(df['interval_start'], format='%H:%M').dt.time
     df['interval_end'] = pd.to_datetime(df['interval_end'], format='%H:%M').dt.time
 
@@ -65,4 +72,5 @@ def merger(file,out):
 
     print(f"Merging complete. The merged schedule is saved as {out}.")
 
-#merger("filled.csv", "merged_schedule.csv")
+# Example usage
+# merger("filled.csv", "merged_schedule.csv")

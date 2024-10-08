@@ -34,7 +34,7 @@ def convert_row(horario, programación):
                         limits.append(counter-2)
 
     # Load the CSV with UTF-8 encoding
-    df = pd.read_csv(r'data_CA\horario.csv', header=None, sep=';', encoding='utf-8')
+    df = pd.read_csv(horario, header=None, sep=';', encoding='utf-8')
 
     if len(limits) > 0:
         # Select columns for the first section (Lunes to Viernes in the first part)
@@ -71,5 +71,7 @@ def process_folder(folder,destination):
         for file in files:
             # Get the full path of the file
             file_path = os.path.join(root, file)
-            print(f"Processing {file_path}\n")
+            print(f"\nProcessing {file_path}\n")
             convert_row(file_path,destination)
+
+convert_row(r"extracted_CSV\Semestres IX, X y XI.csv",r"data_CA\Programación Maestro Macro segunda parte.csv")

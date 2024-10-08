@@ -7,4 +7,4 @@ destination=r"data_CA\Programación Maestro Macro segunda parte.csv" #destinatio
 extractor(excel_file)
 process_folder(folder_path, destination)
 
-#convert_row(r'data_CA\horario.csv',r"data_CA\Programación Maestro Macro segunda parte.csv")
+convert_row(r"data_CA\Calendario Horarios 202420 FORMATO ANTIGUO (16).xlsx",r"data_CA\Programación Maestro Macro segunda parte.csv")

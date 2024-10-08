@@ -11,7 +11,11 @@ Análisis curricular:
 
 
 Horarios_curso:
-1-first of all, the file must have a format which is the days of the week from monday to friday and the hours in the 2 rows to the left. The course format should be "ELECTRO (LAB) SEC 1;MARTES;9:30;10:20" where LAB can be replaced with CLAS or AYUD
+1-first of all, the file must have a format which is the days of the week from monday to friday and the hours in the 2 rows to the left. The course format should be "ELECTRO (LAB) SEC 1;MARTES;9:30;10:20" where LAB can be replaced with CLAS or AYUD. The course name must not contain commas, the type (CLAS) for example, should always have a space between it and the name, like ELECTRO (CLAS), invalidad cases would be ELECTRO(CLAS) or ELECTRO ( CLAS)
 2- Then use the organizer
 3- Then the merger
 4- Then the sepparator
+
+not admitted formats:
+SIMULACION (LAB) SEC 1 (LAB ), should be: SIMULACION (LAB) SEC 1
+SIMULACION (LAB) SEC1, should be: SIMULACION (LAB) SEC 1
