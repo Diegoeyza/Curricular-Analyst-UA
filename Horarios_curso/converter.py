@@ -83,14 +83,14 @@ def convert_row(horario, programación):
     csv_organizer("first_part.csv", "filled.csv")
     merger("filled.csv", "merged_schedule.csv")
     separator("merged_schedule.csv", "separated_schedule.csv")
-    combine(programación,"separated_schedule.csv","final.csv","missing_pairs.txt")
-    xlsx_converter("final.csv","final_x.xlsx")
+    combine(programación,"separated_schedule.csv","final.csv","Missing_pairs.txt")
+    xlsx_converter("final.csv","Programación Maestro final.xlsx")
 
     if second:
         csv_organizer("laboratorios.csv", "lab_filled.csv")
         merger("lab_filled.csv", "lab_merged_schedule.csv")
         separator("lab_merged_schedule.csv", "lab_separated_schedule.csv")
-        combine(programación,"lab_separated_schedule.csv","final.csv","missing_pairs.txt")
+        combine(programación,"lab_separated_schedule.csv","final.csv","Missing_pairs.txt")
 
 def delete_files(file_list):
     for file_path in file_list:
