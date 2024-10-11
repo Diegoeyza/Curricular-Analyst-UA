@@ -8,14 +8,20 @@ Análisis curricular:
 
 4-If you inted to crossreference with another file containing only the valid IDs, convert that file to a csv, put the IDs into a column called CODIGOS and add the file path to the line 4 of the ID_crossreferencer, the code from the crossreferencer gives the user 2 choices, first choose the option one, that will create a csv file with the name type, which the user can modify replacing the 0 with an A if it is an old course so that it creates a new table that does not include the old courses
 
-
-
 Horarios_curso:
 1-first of all, the file must have a format which is the days of the week from monday to friday and the hours in the 2 rows to the left. The course format should be "ELECTRO (LAB) SEC 1;MARTES;9:30;10:20" where LAB can be replaced with CLAS or AYUD. The course name must not contain commas, the type (CLAS) for example, should always have a space between it and the name, like ELECTRO (CLAS), invalidad cases would be ELECTRO(CLAS) or ELECTRO ( CLAS)
-2- Then use the organizer
-3- Then the merger
-4- Then the sepparator
 
-not admitted formats:
+
+2- Then add the file path from your excel file (the one with the timetables and days of the week) to the line 5 of the main.py file.
+
+
+3- Convert your "Programación maestro macro" excel file to a csv (only the sheet with the DPSI) and copy and paste its path to the line 9 
+
+
+
+  [Main Python File](./Horarios_curso/main.py)
+
+
+Not admitted formats:
 SIMULACION (LAB) SEC 1 (LAB ), should be: SIMULACION (LAB) SEC 1
 SIMULACION (LAB) SEC1, should be: SIMULACION (LAB) SEC 1

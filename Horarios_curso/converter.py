@@ -117,4 +117,4 @@ def process_folder(folder,destination):
     delete_files(["filled.csv","final.csv","first_part.csv","merged_schedule.csv",
     "separated_schedule.csv","final.csv","laboratorios.csv","lab_filled.csv","lab_merged_schedule.csv","lab_separated_schedule.csv"])
 
-convert_row(r"extracted_CSV\Semestres IX, X y XI.csv",r"data_CA\Programación Maestro Macro segunda parte.csv")
+#convert_row(r"extracted_CSV\Semestres IX, X y XI.csv",r"data_CA\Programación Maestro Macro segunda parte.csv")
