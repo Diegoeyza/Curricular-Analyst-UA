@@ -3,7 +3,7 @@ import os
 
 def find(data_find, data_to_find, used, pos):
     for i in range(len(data_find)):
-        if ((data_find["name"][i] == data_to_find["TITULO"][pos]) and 
+        if ((data_find["name"][i].lower() == data_to_find["TITULO"][pos].lower()) and 
             (i not in used) and 
             (data_find["section"][i] == data_to_find["SECC."][pos]) and 
             (data_find["type"][i][0:3] == data_to_find["TIPO DE REUNIÓN"][pos][0:3])):         
@@ -53,8 +53,7 @@ def combine(fill, data, out, unmatched_txt):
     # Fill the DIA, INICIO, FIN columns in df_final using the corresponding data from df2
     for i in range(len(used)):
         df_final.at[used2[i], 'DIA'] = str(df2.at[used[i], 'day'])
-        df_final.at[used2[i], 'INICIO'] = str(df2.at[used[i], 'interval_start'])[:-3]
-        df_final.at[used2[i], 'FIN'] = str(df2.at[used[i], 'interval_end'])[:-3]
+        df_final.at[used2[i], 'HORAINICIO/FIN'] = str(df2.at[used[i], 'interval_start'])[:-3]+"-"+str(df2.at[used[i], 'interval_end'])[:-3]
 
     # Replace NaN values with the string "NULL"
     df_final = df_final.replace({pd.NA: 'NULL', 'nan': 'NULL', None: 'NULL'})
