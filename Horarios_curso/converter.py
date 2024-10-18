@@ -114,7 +114,6 @@ def process_folder(folder,destination):
             file_path = os.path.join(root, file)
             print(f"\nProcessing {file_path}\n")
             convert_row(file_path,destination)
-    delete_files(["filled.csv","final.csv","first_part.csv","merged_schedule.csv",
-    "separated_schedule.csv","final.csv","laboratorios.csv","lab_filled.csv","lab_merged_schedule.csv","lab_separated_schedule.csv"])
+    delete_files(["filled.csv","final.csv","first_part.csv","merged_schedule.csv","separated_schedule.csv","final.csv","laboratorios.csv","lab_filled.csv","lab_merged_schedule.csv","lab_separated_schedule.csv"])
 
 #convert_row(r"extracted_CSV\Semestres IX, X y XI.csv",r"data_CA\Programación Maestro Macro segunda parte.csv")

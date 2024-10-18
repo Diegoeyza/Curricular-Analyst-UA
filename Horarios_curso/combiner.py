@@ -14,6 +14,7 @@ def combine(fill, data, out, unmatched_txt):
     used = []
     used2 = []
     unmatched_entries = []  # List to keep track of unmatched entries
+    unmatched_entries2 = []  # List to keep track of unmatched entries
     
     # Load the CSV files
     df1 = pd.read_csv(fill, sep=';')  # file with TITULO, SECC., etc.
@@ -33,9 +34,10 @@ def combine(fill, data, out, unmatched_txt):
     for i in range(len(df2)):
         if i not in used:
             unmatched_entries.append(df2.at[i, 'name']+ "\nSección="+ str((df2.at[i, 'section']))+ "\nTipo="+ str(df2.at[i, 'type']))  # Only save the name
-
+            unmatched_entries2.append(df2.at[i, 'name'])  # Only save the name
     # Remove duplicates by converting the list to a set, then back to a list
     unmatched_entries = list(set(unmatched_entries))
+    unmatched_entries2 = list(set(unmatched_entries2))
 
     # Check if the output file exists
     if os.path.exists(out):
@@ -78,8 +80,13 @@ def combine(fill, data, out, unmatched_txt):
         for idx, entry in enumerate(unmatched_entries, start=start_index):
             f.write(f"Entry {idx}:\n{entry}\n\n")
 
+    #do the same for the list of unmatched entries
+    with open("missing_pairs_list.txt", 'a', encoding='utf-8') as f:
+        for idx, entry in enumerate(unmatched_entries2, start=start_index):
+            f.write(f"{entry}\n")
+
     print(f"Data has been saved to {out}")
-    print(f"Unmatched entries have been saved to {unmatched_txt}")
+    print(f"Unmatched entries have been saved to {unmatched_txt}, and a list has been saved to missing_pairs_list.txt")
 
 # Call the combine function with the appropriate arguments
 # combine(r"data_CA\Programación Maestro Macro segunda parte.csv", "separated_schedule.csv", "final.csv", "unmatched_entries.txt")

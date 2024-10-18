@@ -2,16 +2,16 @@ from converter import convert_row, process_folder, delete_files
 from xls_separator import extractor
 
 #Add the path to the excel file with the timetables
-excel_file = r'C:\Users\diego\OneDrive\Documentos\Pythonhw\.vs\Curricular_analyst_UA\data_CA\Calendario Horarios 202420 FORMATO ANTIGUO (16).xlsx'
+excel_file = r"C:\Users\diego\Downloads\Calendario Horarios 202510 FORMATO ANTIGUO (5).xlsx"
 
 #There is no need to modify this line, it only defines where the data to be processed will be saved
 folder_path = r'extracted_CSV'
 
 #destination file where you want to add the timetables (should be the DPSI)
-destination=r"data_CA\Programación Maestro Macro segunda parte.csv"
+destination=r"C:\Users\diego\Downloads\Programación Maestro (11).csv"
 
 #Make sure that there is a clean start
-delete_files(["Missing_pairs.txt", "Programación Maestro final.xlsx"])
+delete_files(["Missing_pairs.txt", "missing_pairs_list.txt", "Programación Maestro final.xlsx"])
 
 #Process the files
 extractor(excel_file)
