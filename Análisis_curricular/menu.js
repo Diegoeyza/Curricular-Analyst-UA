@@ -5,6 +5,7 @@ function onOpen() {
       .addItem('Agregar', 'copyRowData')
       .addItem("Eliminar última entrada", "deleteLastAddedRow")
       .addItem("Push","copyDataToRALinks")
+      .addItem("Eliminar Links","deleteAllAddedRows")
       .addToUi();
   }
   
@@ -41,6 +42,21 @@ function onOpen() {
     // If there's a valid row to delete, remove it
     if (lastRow >= 9) {
       sheet.deleteRow(lastRow);
+    }
+  }
+  
+  function deleteAllAddedRows() {
+    // Get the active spreadsheet and the current sheet
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    
+    // Start checking from row 9 and find the last non-empty row
+    let lastRow = 9;
+    while (sheet.getRange('A' + lastRow).getValue() !== '') {
+      lastRow++;
+    }
+    while (lastRow!=8){
+      sheet.deleteRow(lastRow);
+      lastRow--;
     }
   }
   
