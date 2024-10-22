@@ -30,19 +30,20 @@ def extract_requisitos(pdf_path):
             requisitos_text = match.group(1).strip()
 
             # Extract IDs and Names from the requisitos_text
-            ids = re.findall(r'\b(?:IC[A-Z]|ING|IOC)-\d+', requisitos_text)
-            names = re.findall(r'([A-ZÁÉÍÓÚÑ\s]+?)(?: \((?:IC[A-Z]|ING|IOC)-\d+\))', requisitos_text)
+            ids = re.findall(r'\b(IC[A-Z]|ING|IOC)-\n*(\d+)', requisitos_text)
+            names = re.findall(r'([A-ZÁÉÍÓÚÑ\s]+?)(?: \((?:IC[A-Z]|ING|IOC)-\n*(?:\d+)\))', requisitos_text)
 
             # Replace newlines with spaces in names
             names = [name.replace('\n', ' ').strip() for name in names]
 
             # Replace hyphens with underscores in IDs
+            ids = [f"{prefix}_{num}" for prefix, num in ids]
             ids = [id_.replace('-', '_') for id_ in ids]
 
             # Format the IDs and Names
             ids_str = '; '.join(ids)
             names_str = '; '.join(names)
-            
+
             return ids_str, names_str
         return "IDs not found", "Names not found"
 

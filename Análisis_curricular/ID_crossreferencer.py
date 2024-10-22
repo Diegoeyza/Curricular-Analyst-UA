@@ -50,4 +50,4 @@ else:
     # Save the filtered DataFrame to a new CSV file
     filtered_df.to_csv('filtered_general.csv', index=False, sep=',', encoding='utf-8')
 
-    print("Updated 'general.csv' with the cross-references and created 'filtered_general.csv' and 'tipo' which can be modified.")
+    print("Updated 'general.csv' with the cross-references and created 'filtered_general.csv', modify general.csv removing the X if you dont want to remove that course.")
