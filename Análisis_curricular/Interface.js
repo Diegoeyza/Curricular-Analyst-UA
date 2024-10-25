@@ -110,29 +110,15 @@ function updateLearningObjectivesDropdown(e) {
           // Get the 'objectives' sheet
           var objectivesSheet = spreadsheet.getSheetByName("objectives");
 
-          // Get the headers from the first row to determine the correct column indices
-          var headers = objectivesSheet.getRange(1, 1, 1, objectivesSheet.getLastColumn()).getValues()[0];
-
-          // Find the column indices for "ID", "ID_Objetivo", and "Objetivo"
-          var idColIndex = headers.indexOf("ID") + 1; // +1 because getRange is 1-based index
-          var idObjetivoColIndex = headers.indexOf("ID_Objetivo") + 1;
-          var objetivoColIndex = headers.indexOf("Objetivo") + 1;
-
-          // Ensure all required columns are found
-          if (idColIndex === 0 || idObjetivoColIndex === 0 || objetivoColIndex === 0) {
-              Logger.log("Error: One or more columns not found in the 'objectives' sheet.");
-              return;
-          }
-
           // Get the learning objectives related to the selected course ID
-          var objectivesRange = objectivesSheet.getRange(2, 1, objectivesSheet.getLastRow() - 1, objectivesSheet.getLastColumn()); // Get all rows from row 2 onward
+          var objectivesRange = objectivesSheet.getRange(2, 1, objectivesSheet.getLastRow() - 1, 4); // Get Course ID, Objective ID, Objective
           var objectivesValues = objectivesRange.getValues();
           
           // Filter learning objectives based on the selected course ID
           var filteredObjectives = objectivesValues.filter(function(row) {
-              return row[idColIndex - 1] == courseID; // Compare with course ID using the dynamically found index
+              return row[0] == courseID; // Row[0] is the course ID in the 'objectives' sheet
           }).map(function(row) {
-              return row[objetivoColIndex - 1]; // Get the objective using the 'Objetivo' column index
+              return row[3]; // Get the objective from column 4 (index 3)
           });
 
           // Get the "Course Dropdown" sheet
@@ -164,29 +150,15 @@ function updateLearningObjectivesDropdown(e) {
       // Get the 'objectives' sheet
       var objectivesSheet = spreadsheet.getSheetByName("objectives");
 
-      // Get the headers from the first row to determine the correct column indices
-      var headers = objectivesSheet.getRange(1, 1, 1, objectivesSheet.getLastColumn()).getValues()[0];
-
-      // Find the column indices for "ID", "ID_Objetivo", and "Objetivo"
-      var idColIndex = headers.indexOf("ID") + 1; // +1 because getRange is 1-based index
-      var idObjetivoColIndex = headers.indexOf("ID_Objetivo") + 1;
-      var objetivoColIndex = headers.indexOf("Objetivo") + 1;
-
-      // Ensure all required columns are found
-      if (idColIndex === 0 || idObjetivoColIndex === 0 || objetivoColIndex === 0) {
-          Logger.log("Error: One or more columns not found in the 'objectives' sheet.");
-          return;
-      }
-
       // Get the learning objectives related to the selected course ID
-      var objectivesRange = objectivesSheet.getRange(2, 1, objectivesSheet.getLastRow() - 1, objectivesSheet.getLastColumn()); // Get all rows from row 2 onward
+      var objectivesRange = objectivesSheet.getRange(2, 1, objectivesSheet.getLastRow() - 1, 4); // Get Course ID, Objective ID, Objective
       var objectivesValues = objectivesRange.getValues();
-
+      
       // Find the corresponding Objective ID for the selected objective
       var objectiveID = null;
       for (var j = 0; j < objectivesValues.length; j++) {
-          if (objectivesValues[j][objetivoColIndex - 1] === selectedObjective) { // Compare with objective text in the 'Objetivo' column
-              objectiveID = objectivesValues[j][idObjetivoColIndex - 1]; // Get the Objective ID from the 'ID_Objetivo' column
+          if (objectivesValues[j][3] === selectedObjective) { // Compare with objective text in column 4
+              objectiveID = objectivesValues[j][1]; // Get the Objective ID from column 2
               break;
           }
       }
@@ -195,9 +167,6 @@ function updateLearningObjectivesDropdown(e) {
       if (objectiveID) {
           // Set the Objective ID in B3
           sheet.getRange(5, 2).setValue(objectiveID);
-      } else {
-          // Clear B3 if no matching Objective ID is found
-          sheet.getRange(5, 2).clearContent();
       }
   }
 
