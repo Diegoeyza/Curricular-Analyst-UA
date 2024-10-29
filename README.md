@@ -17,8 +17,10 @@ Horarios_curso:
 
 4- Now you can run the code in [main.py](Horarios_curso/main.py), it will create 2 output files:
   I) Programación Maestro final.csv -> This file has the updated programation fro the courses with the timetables, if a row doesn´t have a timetable assigned, it will be marked with red
-  II) Missing_pairs.txt -> This file has the timetables that didnt find a match to its corresponding course in Programación Maestro final, with all of their corresponding information
+  II) Missing_pairs.txt -> This file has the timetables that didnt find a match to its corresponding course in Programación Maestro final, with all of their corresponding information (there is also a missing_pairs_list that is the same but with a diferent format)
 
 Not admitted formats:
 SIMULACION (LAB) SEC 1 (LAB ), should be: SIMULACION (LAB) SEC 1
 SIMULACION (LAB) SEC1, should be: SIMULACION (LAB) SEC 1
+
+You can modify the dictionary of equivalences at [iterator.py](Horarios_curso/iterator.py) by adding new entries or deleting existing ones if they create conflicts (the best option would be to delete the existing dictionary and create a new one)

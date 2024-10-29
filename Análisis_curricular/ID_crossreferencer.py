@@ -19,8 +19,8 @@ if filter_choice == '2':
     # Now load 'requirements.csv' and remove rows where 'Nombre_requisito' does not exist in 'Nombre' from 'general.csv'
     df_requisitos = pd.read_csv('requirements.csv', sep=',', encoding='utf-8')
 
-    # Filter rows where 'Nombre_Requisito' exists in 'Nombre' of 'general.csv'
-    df_requisitos_filtered = df_requisitos[df_requisitos['Nombre_Requisito'].isin(filtered_df['Nombre'])]
+    # Filter rows where ID requisito is in ID from general
+    df_requisitos_filtered = df_requisitos[df_requisitos['ID_Requisito'].isin(filtered_df['ID'])]
 
     # Save the filtered 'requisitos.csv'
     df_requisitos_filtered.to_csv('filtered_requirements.csv', index=False, sep=',', encoding='utf-8')

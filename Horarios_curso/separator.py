@@ -159,7 +159,30 @@ def separator(file, out):
         "HORMIGON ARMADO":"Hormigón Armado",
         "DISEÑO Y EV DE PROY":"Diseño y Evaluación de Proyectos Industriales",
         "SIMULACION":"Simulación",
-        "ARTIFICAL INTELLIGENCE":"Artificial Intelligence"
+        "ARTIFICAL INTELLIGENCE":"Artificial Intelligence",
+        "FUND CIBERSEGURIDAD":"Fundamentos de Ciberseguridad",
+        "FUND ING DE PR":"Fundamentos de Ingeniería de Procesos",
+        "Artificial Intelligence":"Artificial Intelligence ",
+        "DIS AVAN DE REACT QUIM Y BIO":"Electivos Ambiental 1 - Diseño Avanzado de Reactores Químicos y Bioquímicos",
+        "HIDR DE AGUAST SUBT":"Electivos Obras 1 - Hidráulica de Aguas Subterráneas",
+        "FUND ECONOMIA":"Fundamentos de Economía",
+        "ANALITICA BAYESIANA":"Analítica Bayesiana para Negocios",
+        "TEC ANAL Y EXP":"Electivos Ambiental 2 - Técnicas Analíticas y Experimentales en Ingeniería de Procesos",
+        "AUTOMATIZACION INDUSTRIAL":"Electivos Eléctrica 1 - Automatización Industrial ",
+        "PROYECTOS ELECTRICOS":"Electivos Eléctrica 2 - Proyectos eléctricos",
+        "MODELAMIENTO":"Electivos Industrial 1 - Modelamiento",
+        "GEST DE OP LOG PORT":"Electivos Industrial 2 - Gestión de Operaciones Logístico-Portuarias",
+        "METODOS EMPIRICOS":"Electivos Industrial 3 - Métodos Empíricos",
+        "INVERSIONES":"Electivos Industrial 5 - Inversiones",
+        "INVERSIONES INM":"Electivos Industrial 6 - Inversiones Inmobiliarias",
+        "CONS Y SUS EN HA":"Electivos Obras 2 - Construcción y Sustentabilidad en Hormigón Armado",
+        "TOP AVANZ EN ING ESTR":"Electivos Obras 3 - Tópicos Avanzados en Ingeniería Estructural",
+        "FUND CIBERSEGURIDAD":"Fundamentos de Ciberseguridad",
+        "FUND ENERG RENOV":"Fundamentos de Energias Renovables",
+        "FUND MACH LER":"Fundamentos Machine Learning",
+        "Legislación y Evaluación de Impacto Ambiental":"Legislación y Evaluación de Impacto Ambiental",
+        "Mercados Eléctricos":"Mercados Eléctricos",
+        "PROGRAMACION BAJO NIVEL":"Programación de Bajo Nivel"
     }
 
 
