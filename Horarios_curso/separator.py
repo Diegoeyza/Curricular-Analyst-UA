@@ -159,7 +159,7 @@ def separator(file, out):
         "HORMIGON ARMADO":"Hormigón Armado",
         "DISEÑO Y EV DE PROY":"Diseño y Evaluación de Proyectos Industriales",
         "SIMULACION":"Simulación",
-        "ARTIFICAL INTELLIGENCE":"Artificial Intelligence",
+        "ARTIFICAL INTELLIGENCE":"Artificial Intelligence ",
         "FUND CIBERSEGURIDAD":"Fundamentos de Ciberseguridad",
         "FUND ING DE PR":"Fundamentos de Ingeniería de Procesos",
         "Artificial Intelligence":"Artificial Intelligence ",
@@ -182,7 +182,8 @@ def separator(file, out):
         "FUND MACH LER":"Fundamentos Machine Learning",
         "Legislación y Evaluación de Impacto Ambiental":"Legislación y Evaluación de Impacto Ambiental",
         "Mercados Eléctricos":"Mercados Eléctricos",
-        "PROGRAMACION BAJO NIVEL":"Programación de Bajo Nivel"
+        "PROGRAMACION BAJO NIVEL":"Programación de Bajo Nivel",
+        "INT ARTIFICIAL APL":"Inteligencia Artificial Aplicada"
     }
 
 
