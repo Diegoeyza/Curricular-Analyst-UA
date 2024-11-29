@@ -8,113 +8,6 @@ Sub FilterByType()
     Dim targetCol As Integer
     Dim idTypeMap As Object
     Dim typeList As String
-    Dim i As Long
-    Dim Key As Variant
-
-    ' Set the RawData worksheet
-    Set rawDataWs = ThisWorkbook.Sheets("RawData")
-
-    ' Initialize a dictionary to map UniqueIDs to types
-    Set idTypeMap = CreateObject("Scripting.Dictionary")
-
-    ' Identify the relevant columns in RawData
-    Set uniqueIdCol = rawDataWs.Range("D2:D" & rawDataWs.Cells(rawDataWs.Rows.Count, 4).End(xlUp).Row) ' Column 4: UniqueID
-    Set areaTypeCol = rawDataWs.Range("B2:B" & rawDataWs.Cells(rawDataWs.Rows.Count, 2).End(xlUp).Row) ' Column 2: Clasificación por área
-
-    ' Debug print to check if the columns are being set correctly
-    Debug.Print "RawData worksheet set successfully."
-    Debug.Print "UniqueID column range: " & uniqueIdCol.Address
-    Debug.Print "Area type column range: " & areaTypeCol.Address
-
-    ' Fill the dictionary with UniqueID-to-Type mapping
-    For Each cell In uniqueIdCol
-        If cell.Row > 1 And Not IsEmpty(cell.Value) Then
-            idTypeMap(Trim(cell.Value)) = Trim(rawDataWs.Cells(cell.Row, 2).Value)
-        End If
-    Next cell
-
-    ' Debug print to check the dictionary contents
-    Debug.Print "Dictionary populated with UniqueID-to-Type mapping:"
-    For Each Key In idTypeMap.Keys
-        Debug.Print "UniqueID: " & Key & ", Type: " & idTypeMap(Key)
-    Next
-
-    ' Collect unique types
-    Set uniqueIds = CreateObject("Scripting.Dictionary")
-    For Each Key In idTypeMap.Items
-        If Not uniqueIds.exists(Key) Then
-            uniqueIds.Add Key, Key
-        End If
-    Next
-
-    ' Debug print to check unique types collection
-    Debug.Print "Unique types collected:"
-    For Each Key In uniqueIds.Keys
-        Debug.Print Key
-    Next
-
-    ' Create a list of unique types as a string
-    typeList = "Select a type from the following list:" & vbCrLf
-    For Each Key In uniqueIds.Keys
-        typeList = typeList & Key & vbCrLf
-    Next
-
-    ' Debug print to check the type list string
-    Debug.Print "Type list created:" & vbCrLf & typeList
-
-    ' Prompt the user to select a type from the list
-    selectedType = InputBox(typeList, "Select a type")
-    If selectedType = "" Then
-        Debug.Print "No type selected. Exiting macro."
-        Exit Sub
-    End If
-
-    ' Debug print to confirm the selected type
-    Debug.Print "Selected type: " & selectedType
-
-    ' Loop through each worksheet to filter rows based on the selected type
-    For Each ws In ThisWorkbook.Worksheets
-        If ws.Name <> "RawData" Then
-            ' Find the "UniqueID" column within the first 4 columns
-            For targetCol = 1 To 4
-                If ws.Cells(1, targetCol).Value = "UniqueID" Then
-                    ' Debug print to confirm the column found
-                    Debug.Print "UniqueID column found in sheet: " & ws.Name & " at column: " & targetCol
-
-                    ' Loop through the rows below the header to delete rows that don't match the selected type
-                    For i = ws.Cells(ws.Rows.Count, targetCol).End(xlUp).Row To 2 Step -1
-                        If ws.Cells(i, targetCol).Value <> "" And idTypeMap.exists(Trim(ws.Cells(i, targetCol).Value)) Then
-                            If idTypeMap(Trim(ws.Cells(i, targetCol).Value)) <> selectedType Then
-                                ws.Rows(i).Delete
-                                ' Debug print to show which rows are being deleted
-                                Debug.Print "Row " & i & " deleted in sheet: " & ws.Name
-                            End If
-                        End If
-                    Next i
-                    Exit For
-                End If
-            Next targetCol
-        End If
-    Next ws
-
-    MsgBox "Filtering complete!"
-End Sub
-
-
-
-
-
-UPDATED BUT FAULTY
-Sub FilterByType()
-    Dim ws As Worksheet
-    Dim rawDataWs As Worksheet
-    Dim uniqueIdCol As Range, areaTypeCol As Range
-    Dim uniqueIds As Object
-    Dim selectedType As String
-    Dim cell As Range
-    Dim targetCol As Integer
-    Dim idTypeMap As Object
-    Dim typeList As String
     Dim typeArray() As String
     Dim lastRow As Long
 
@@ -183,9 +76,8 @@ Sub FilterByType()
     ' Debug print to confirm the selected type
     Debug.Print "Selected type: " & selectedType
 
-    ' Loop through each worksheet to filter rows based on the selected type
     For Each ws In ThisWorkbook.Worksheets
-        If ws.Name <> "RawData" Then
+        If ws.Name <> "RawData" And ws.Name <> "P1 ASIGNATURA ABIERTA" And ws.Name <> "P5 ASIGNATURA ABIERTA" And ws.Name <> "P1. PROFESOR ABIERTA" And ws.Name <> "P2. PROFESOR ABIERTA" And ws.Name <> "P3. PROFESOR ABIERTA" And ws.Name <> " Aspectos Positivos Profesor " And ws.Name <> "Mejoras Profesor" And ws.Name <> "QuestionMapper" And ws.Name <> "P5 ASIGNATURA ABIERTA" Then
             ' Search for the "UniqueID" column within the first 4 columns
             Debug.Print ws.Name
             
@@ -193,12 +85,10 @@ Sub FilterByType()
             For targetCol = 1 To 7
                 ' Loop through the first 7 rows to check if the current column contains the "UniqueID" header
                 For headerRow = 1 To 7
-                    Debug.Print ws.Cells(headerRow, targetCol).Value
+                    ' Debug.Print ws.Cells(headerRow, targetCol).Value
+                    ' Debug.Print targetCol
                     If ws.Cells(headerRow, targetCol).Value = "UniqueID" Then
-                        ' Debug print to confirm the column found
-                        Debug.Print "UniqueID column found in sheet: " & ws.Name & " at column: " & targetCol & " in row: " & headerRow
-            
-                        ' Loop through the rows below the header in reverse order to delete rows that don't match the selected type
+                        Debug.Print ws.Cells(headerRow, targetCol).Value
                         For i = ws.Cells(ws.Rows.Count, targetCol).End(xlUp).Row To headerRow + 1 Step -1
                             If ws.Cells(i, targetCol).Value <> "" Then
                                 If idTypeMap.exists(ws.Cells(i, targetCol).Value) Then
@@ -210,14 +100,12 @@ Sub FilterByType()
                                 End If
                             End If
                         Next i
-                        Exit For ' Exit the header row loop once the "UniqueID" column is found
                     End If
                 Next headerRow
             Next targetCol
 
         End If
     Next ws
-
     MsgBox "Filtering complete!"
 End Sub
 
