@@ -1,26 +1,58 @@
-Análisis curricular:
 
-1-To begin the analysis download all of the syllabus as pdf and extract them in a specific folder
+# Curriculum Analysis Guide
 
-2-Copy the path of the folder and add it to the pdf_scrapper in the line 127
+## Análisis Curricular
 
-3-Run the csv_converter to create the tables with the data
+### Steps:
+1. **Download and Extract PDFs**:
+   - Download all syllabi as PDF files and extract them into a specific folder.
 
-4-If you inted to crossreference with another file containing only the valid IDs, convert that file to a csv, put the IDs into a column called CODIGOS and add the file path to the line 4 of the ID_crossreferencer, the code from the crossreferencer gives the user 2 choices, first choose the option one, which will mark with a check or a cross if a course will be eliminated, you can modify this (general.csv) deleting the crosses of the courses you dont want gone. After doing that run the code again but choose option 2. That will create a new table that does not include the old courses called filtered_general.csv
+2. **Set Folder Path**:
+   - Copy the folder path and update it in `pdf_scrapper` at **line 127**.
 
-Horarios_curso:
-1-first of all, the file must have a format which is the days of the week from monday to friday and the hours in the 2 rows to the left. The course format should be "ELECTRO (LAB) SEC 1;MARTES;9:30;10:20" where LAB can be replaced with CLAS or AYUD. The course name must not contain commas, the type (CLAS) for example, should always have a space between it and the name, like ELECTRO (CLAS), invalidad cases would be ELECTRO(CLAS) or ELECTRO ( CLAS)
+3. **Generate Data Tables**:
+   - Run `csv_converter` to create tables from the extracted data.
 
-2- Then add the file path from your excel file (the one with the timetables and days of the week) to the [line 5 of the main.py](https://github.com/Diegoeyza/Curricular-Analyst-UA/blob/a79c77a4c8fcb8e9cb2623926d34b067f64dffac/Horarios_curso/main.py#L5) file.
+4. **Cross-reference IDs** (Optional):
+   - If you need to compare against a file with valid IDs:
+     - Convert the file to CSV and ensure the IDs are in a column named `CODIGOS`.
+     - Add the file path to **line 4** of `ID_crossreferencer`.
+   - When running `ID_crossreferencer`, follow these steps:
+     - Choose **Option 1**: This will create `general.csv`, marking each course with a check or cross (indicating whether it should be excluded). Modify this file by removing crosses for courses you want to retain.
+     - Run the code again and select **Option 2**: This generates a new table `filtered_general.csv` with the updated course list.
 
-3- Convert your "Programación maestro macro" excel file to a csv (only the sheet with the DPSI) and copy and paste its path to the [line 9 in main.py](https://github.com/Diegoeyza/Curricular-Analyst-UA/blob/a79c77a4c8fcb8e9cb2623926d34b067f64dffac/Horarios_curso/main.py#L9)
+---
 
-4- Now you can run the code in [main.py](Horarios_curso/main.py), it will create 2 output files:
-  I) Programación Maestro final.csv -> This file has the updated programation fro the courses with the timetables, if a row doesn´t have a timetable assigned, it will be marked with red
-  II) Missing_pairs.txt -> This file has the timetables that didnt find a match to its corresponding course in Programación Maestro final, with all of their corresponding information (there is also a missing_pairs_list that is the same but with a diferent format)
+## Horarios_curso
 
-Not admitted formats:
-SIMULACION (LAB) SEC 1 (LAB ), should be: SIMULACION (LAB) SEC 1
-SIMULACION (LAB) SEC1, should be: SIMULACION (LAB) SEC 1
+### Steps:
+1. **Prepare the Input File**:
+   - Ensure your timetable file has:
+     - Days of the week (Monday to Friday) and hours in the first two rows.
+     - Course entries in the format: `ELECTRO (LAB) SEC 1;MARTES;9:30;10:20`.
+     - **Important**: The course name should:
+       - Not contain commas.
+       - Have a space between the name and type (e.g., `ELECTRO (CLAS)`).
+     - Invalid examples:
+       - `ELECTRO(CLAS)` → Missing space.
+       - `ELECTRO ( CLAS)` → Extra spaces.
 
-You can modify the dictionary of equivalences at [iterator.py](Horarios_curso/iterator.py) by adding new entries or deleting existing ones if they create conflicts (the best option would be to delete the existing dictionary and create a new one)
+2. **Set File Paths**:
+   - Add your timetable file path to **line 5** of [`main.py`](https://github.com/Diegoeyza/Curricular-Analyst-UA/blob/a79c77a4c8fcb8e9cb2623926d34b067f64dffac/Horarios_curso/main.py#L5).
+   - Convert your "Programación maestro macro" Excel file to CSV (only the DPSI sheet) and add its path to **line 9** of [`main.py`](https://github.com/Diegoeyza/Curricular-Analyst-UA/blob/a79c77a4c8fcb8e9cb2623926d34b067f64dffac/Horarios_curso/main.py#L9).
+
+3. **Run the Code**:
+   - Execute [`main.py`](Horarios_curso/main.py). It will generate:
+     - **`Programación Maestro final.csv`**: Updated timetable with assigned schedules (rows without schedules are marked in red).
+     - **`Missing_pairs.txt`**: Contains unmatched timetables with their details.
+
+### Not Admitted Formats:
+| Incorrect Format                | Correct Format               |
+|---------------------------------|------------------------------|
+| `SIMULACION (LAB) SEC 1 (LAB )` | `SIMULACION (LAB) SEC 1`     |
+| `SIMULACION (LAB) SEC1`         | `SIMULACION (LAB) SEC 1`     |
+
+4. **Modify Equivalences**:
+   - Update the dictionary of equivalences in [`iterator.py`](Horarios_curso/iterator.py) as needed:
+     - Add new entries.
+     - Delete conflicting entries (recommended to recreate the dictionary if necessary).
