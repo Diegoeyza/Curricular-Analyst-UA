@@ -31,6 +31,7 @@ for _, row in objectives_df.iterrows():
     objective_name = row['Objetivo']
     node_label = f"{course_id}-{objective_id}"
     graph.add_node(node_label, label=objective_name, type="objective")
+    # Link course to its objectives
     graph.add_edge(course_id, node_label, type="has_objective")
 
 # Add objective links as edges from the RA_Links sheet
@@ -53,7 +54,7 @@ for node, data in graph.nodes(data=True):
     if node_type == "course":
         net.add_node(node, label=label, color="lightblue", title="Course")
     elif node_type == "objective":
-        net.add_node(node, label=label, color="lightgreen", title="Objective", hidden=True)
+        net.add_node(node, label=label, color="lightgreen", title="Objective")
     else:
         net.add_node(node, label=label, color="grey", title="Unknown")
 
@@ -68,12 +69,16 @@ for source, target, data in graph.edges(data=True):
     else:
         net.add_edge(source, target, color="grey", title="Unknown")
 
-# Set basic JSON options for physics and interaction
+# Enable clustering by course to hide objectives initially
+for course_id in general_df['ID']:
+    cluster_nodes = [node for node in graph.nodes if node.startswith(f"{course_id}-")]
+    if cluster_nodes:
+        net.add_node(course_id, label=graph.nodes[course_id]['label'], color="lightblue", title="Course", shape="dot")
+        net.add_edges([(course_id, obj) for obj in cluster_nodes])
+
+# Set physics options for better layout
 net.set_options("""
-{
-  "interaction": {
-    "hover": true
-  },
+var options = {
   "physics": {
     "barnesHut": {
       "gravitationalConstant": -20000,
@@ -90,30 +95,5 @@ net.set_options("""
 # Save and display the graph
 output_file = "curricular_graph.html"
 net.save_graph(output_file)
-
-# Add custom JavaScript to the HTML
-with open(output_file, "r", encoding="utf-8") as file:
-    html_content = file.read()
-
-custom_js = """
-<script type="text/javascript">
-network.on("click", function (params) {
-    if (params.nodes.length > 0) {
-        let clickedNode = params.nodes[0];
-        let connectedNodes = network.getConnectedNodes(clickedNode);
-        connectedNodes.forEach(function(node) {
-            network.body.data.nodes.update({id: node, hidden: false});
-        });
-    }
-});
-</script>
-"""
-
-# Insert the custom JavaScript before the closing </body> tag
-html_content = html_content.replace("</body>", custom_js + "</body>")
-
-# Save the updated HTML file
-with open(output_file, "w", encoding="utf-8") as file:
-    file.write(html_content)
-
-print(f"Interactive graph with custom events saved to {output_file}")
+print(f"Graph saved as: {output_file}")
+print(f"Interactive graph saved to {output_file}")
