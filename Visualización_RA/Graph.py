@@ -30,7 +30,7 @@ for _, row in objectives_df.iterrows():
     objective_id = row['ID_Objetivo']
     objective_name = row['Objetivo']
     node_label = f"{course_id}-{objective_id}"
-    graph.add_node(node_label, label=objective_name, type="objective", hidden=True)
+    graph.add_node(node_label, label=objective_name, type="objective")
     # Link course to its objectives
     graph.add_edge(course_id, node_label, type="has_objective")
 
@@ -54,7 +54,7 @@ for node, data in graph.nodes(data=True):
     if node_type == "course":
         net.add_node(node, label=label, color="lightblue", title="Course")
     elif node_type == "objective":
-        net.add_node(node, label=label, color="lightgreen", title="Objective", hidden=True)
+        net.add_node(node, label=label, color="lightgreen", title="Objective")
     else:
         net.add_node(node, label=label, color="grey", title="Unknown")
 
@@ -69,8 +69,28 @@ for source, target, data in graph.edges(data=True):
     else:
         net.add_edge(source, target, color="grey", title="Unknown")
 
-# Enable physics for better layout
-net.toggle_physics(True)
+# Enable clustering by course to hide objectives initially
+for course_id in general_df['ID']:
+    cluster_nodes = [node for node in graph.nodes if node.startswith(f"{course_id}-")]
+    if cluster_nodes:
+        net.add_node(course_id, label=graph.nodes[course_id]['label'], color="lightblue", title="Course", shape="dot")
+        net.add_edges([(course_id, obj) for obj in cluster_nodes])
+
+# Set physics options for better layout
+net.set_options("""
+var options = {
+  "physics": {
+    "barnesHut": {
+      "gravitationalConstant": -20000,
+      "centralGravity": 0.3,
+      "springLength": 95,
+      "springConstant": 0.04,
+      "damping": 0.09
+    },
+    "minVelocity": 0.75
+  }
+}
+""")
 
 # Save and display the graph
 output_file = "curricular_graph.html"
