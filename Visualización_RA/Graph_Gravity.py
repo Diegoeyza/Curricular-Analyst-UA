@@ -192,15 +192,6 @@ resetButton.onclick = resetView;
 
 document.body.appendChild(resetButton);
 
-// Add a timer to freeze the gravitational effect after 10 seconds
-setTimeout(() => {
-    network.setOptions({
-        physics: {
-            enabled: false // Disable physics to prevent nodes from moving
-        }
-    });
-}, 90000);
-
 // Add a search input field
 const searchInput = document.createElement("input");
 searchInput.type = "text";
