@@ -84,7 +84,7 @@ var options = {
 """)
 
 # Save the graph
-output_file = "curricular_graph.html"
+output_file = "curricular_graph_bonito.html"
 net.save_graph(output_file)
 
 # Add custom JavaScript for interactivity
@@ -94,19 +94,21 @@ with open(output_file, "r", encoding="utf-8") as file:
 custom_js = """
 <script type="text/javascript">
 let defaultCourses = network.body.data.nodes.get().filter(node => node.title === "Course");
-let defaultEdges = network.body.data.edges.get().filter(edge => edge.title === "Prerequisite");
+let defaultEdges = network.body.data.edges.get();
 
-// Reset view to show only courses and their prerequisite edges
+// Reset view to the initial state (only courses with arrows visible)
 function resetView() {
     // Show all courses
     network.body.data.nodes.update(defaultCourses.map(node => ({ id: node.id, hidden: false })));
     
-    // Show all prerequisite edges
-    network.body.data.edges.update(defaultEdges.map(edge => ({ id: edge.id, hidden: false })));
-
-    // Ensure objectives remain hidden
-    let objectives = network.body.data.nodes.get().filter(node => node.title === "Objective");
-    network.body.data.nodes.update(objectives.map(node => ({ id: node.id, hidden: true })));
+    // Show all prerequisite edges between courses
+    network.body.data.edges.update(defaultEdges.map(edge => ({
+        id: edge.id,
+        hidden: edge.title === "Prerequisite" ? false : true, // Show only prerequisite links
+    })));
+    
+    // Hide all objectives
+    network.body.data.nodes.update(network.body.data.nodes.get().filter(node => node.title === "Objective").map(obj => ({ id: obj.id, hidden: true })));
 }
 
 // Add a reset button
@@ -195,7 +197,6 @@ network.on("click", function (params) {
     }
 });
 </script>
-
 """
 
 # Inject custom JavaScript into the HTML
