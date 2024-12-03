@@ -74,7 +74,7 @@ var options = {
       "springConstant": 0.04,
       "damping": 0.09
     },
-    "minVelocity": 20
+    "minVelocity": 0.75
   },
   "interaction": {
     "hover": true,
@@ -118,63 +118,6 @@ resetButton.style.left = "10px";
 resetButton.style.zIndex = "1000";
 resetButton.onclick = resetView;
 document.body.appendChild(resetButton);
-
-// Add a search input field
-const searchInput = document.createElement("input");
-searchInput.type = "text";
-searchInput.placeholder = "Search for a course...";
-searchInput.style.position = "absolute";
-searchInput.style.top = "10px";
-searchInput.style.left = "120px";
-searchInput.style.zIndex = "1000";
-document.body.appendChild(searchInput);
-
-// Add a container for search suggestions
-const suggestionsContainer = document.createElement("div");
-suggestionsContainer.style.position = "absolute";
-suggestionsContainer.style.top = "40px";
-suggestionsContainer.style.left = "120px";
-suggestionsContainer.style.zIndex = "1000";
-suggestionsContainer.style.border = "1px solid #ccc";
-suggestionsContainer.style.backgroundColor = "#fff";
-suggestionsContainer.style.maxHeight = "200px";
-suggestionsContainer.style.overflowY = "auto";
-suggestionsContainer.style.display = "none";
-document.body.appendChild(suggestionsContainer);
-
-// Function to show suggestions
-function showSuggestions(matches) {
-    suggestionsContainer.innerHTML = ""; // Clear previous suggestions
-    if (matches.length > 0) {
-        suggestionsContainer.style.display = "block";
-        matches.forEach(course => {
-            const suggestion = document.createElement("div");
-            suggestion.textContent = course.label;
-            suggestion.style.padding = "5px";
-            suggestion.style.cursor = "pointer";
-            suggestion.onclick = function() {
-                network.focus(course.id, { scale: 1.5, animation: true });
-                network.selectNodes([course.id]);
-                suggestionsContainer.style.display = "none";
-            };
-            suggestionsContainer.appendChild(suggestion);
-        });
-    } else {
-        suggestionsContainer.style.display = "none";
-    }
-}
-
-// Event listener for the search input
-searchInput.addEventListener("input", function() {
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    if (searchTerm) {
-        // Find matching courses based on the input
-        let matches = defaultCourses.filter(course => course.label.toLowerCase().includes(searchTerm));
-        showSuggestions(matches);
-    } else {
-        suggestionsContainer.style.display = "none"; // Hide suggestions if input is empty
-    }
-});
 
 // Handle node clicks
 network.on("click", function (params) {
@@ -252,6 +195,7 @@ network.on("click", function (params) {
     }
 });
 </script>
+
 """
 
 # Inject custom JavaScript into the HTML

@@ -84,7 +84,7 @@ var options = {
 """)
 
 # Save the graph
-output_file = "curricular_graph_bonito.html"
+output_file = "curricular_graph.html"
 net.save_graph(output_file)
 
 # Add custom JavaScript for interactivity
@@ -94,21 +94,19 @@ with open(output_file, "r", encoding="utf-8") as file:
 custom_js = """
 <script type="text/javascript">
 let defaultCourses = network.body.data.nodes.get().filter(node => node.title === "Course");
-let defaultEdges = network.body.data.edges.get();
+let defaultEdges = network.body.data.edges.get().filter(edge => edge.title === "Prerequisite");
 
-// Reset view to the initial state (only courses with arrows visible)
+// Reset view to show only courses and their prerequisite edges
 function resetView() {
     // Show all courses
     network.body.data.nodes.update(defaultCourses.map(node => ({ id: node.id, hidden: false })));
     
-    // Show all prerequisite edges between courses
-    network.body.data.edges.update(defaultEdges.map(edge => ({
-        id: edge.id,
-        hidden: edge.title === "Prerequisite" ? false : true, // Show only prerequisite links
-    })));
-    
-    // Hide all objectives
-    network.body.data.nodes.update(network.body.data.nodes.get().filter(node => node.title === "Objective").map(obj => ({ id: obj.id, hidden: true })));
+    // Show all prerequisite edges
+    network.body.data.edges.update(defaultEdges.map(edge => ({ id: edge.id, hidden: false })));
+
+    // Ensure objectives remain hidden
+    let objectives = network.body.data.nodes.get().filter(node => node.title === "Objective");
+    network.body.data.nodes.update(objectives.map(node => ({ id: node.id, hidden: true })));
 }
 
 // Add a reset button
@@ -120,6 +118,47 @@ resetButton.style.left = "10px";
 resetButton.style.zIndex = "1000";
 resetButton.onclick = resetView;
 document.body.appendChild(resetButton);
+
+// Add a search input field
+const searchInput = document.createElement("input");
+searchInput.type = "text";
+searchInput.placeholder = "Search for a course...";
+searchInput.style.position = "absolute";
+searchInput.style.top = "10px";
+searchInput.style.left = "120px";
+searchInput.style.zIndex = "1000";
+document.body.appendChild(searchInput);
+
+// Add a search button
+const searchButton = document.createElement("button");
+searchButton.innerText = "Search";
+searchButton.style.position = "absolute";
+searchButton.style.top = "10px";
+searchButton.style.left = "300px";
+searchButton.style.zIndex = "1000";
+searchButton.onclick = function() {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    if (searchTerm) {
+        // Find the node with the given course name
+        let courseNode = defaultCourses.find(node => node.label.toLowerCase() === searchTerm);
+        if (courseNode) {
+            // Zoom in and focus on the found course node
+            network.focus(courseNode.id, { scale: 1.5, animation: true });
+            network.selectNodes([courseNode.id]);
+
+            // Optionally highlight the node
+            network.body.data.nodes.update({ id: courseNode.id, color: { background: "yellow" } });
+
+            // Set a timeout to remove the highlight after a few seconds (optional)
+            setTimeout(() => {
+                network.body.data.nodes.update({ id: courseNode.id, color: { background: "lightblue" } });
+            }, 3000);
+        } else {
+            alert("Course not found!");
+        }
+    }
+};
+document.body.appendChild(searchButton);
 
 // Handle node clicks
 network.on("click", function (params) {
