@@ -1,4 +1,5 @@
 import pandas as pd
+import textwrap
 import networkx as nx
 from pyvis.network import Network
 
@@ -29,9 +30,21 @@ for _, row in objectives_df.iterrows():
     course_id = row['ID']
     objective_id = row['ID_Objetivo']
     objective_name = row['Objetivo']
+
+    # Ensure objective_name is a string and handle missing values
+    if pd.isna(objective_name):
+        objective_name = "No description available"
+    else:
+        objective_name = str(objective_name)
+
+    # Use textwrap to wrap text at spaces
+    max_line_length = 30  # Adjust line length as needed
+    objective_name_wrapped = "\n".join(textwrap.wrap(objective_name, width=max_line_length))
+
     node_label = f"{course_id}-{objective_id}"
-    graph.add_node(node_label, label=objective_name, type="objective")
+    graph.add_node(node_label, label=objective_name_wrapped, type="objective")
     graph.add_edge(course_id, node_label, type="has_objective")
+
 
 # Add objective links as edges
 for _, row in ra_links_df.iterrows():
@@ -51,12 +64,32 @@ net = Network(height="1000px", width="100%", directed=True)
 for node, data in graph.nodes(data=True):
     node_type = data.get("type", "unknown")
     label = data.get("label", str(node))
+    
     if node_type == "course":
-        net.add_node(node, label=label, color="lightblue", title="Course")
+        net.add_node(
+            node,
+            label=label,
+            color="lightblue",
+            title="Course",
+            font={"size": 24}  # Approximately 100% bigger for courses
+        )
     elif node_type == "objective":
-        net.add_node(node, label=label, color="lightgreen", title="Objective", hidden=True)  # Initially hidden
+        net.add_node(
+            node,
+            label=label,
+            color="lightgreen",
+            title="Objective",
+            hidden=True,  # Initially hidden
+            font={"size": 21, "multi": True}  # 50% bigger and multiline for objectives
+        )
     else:
-        net.add_node(node, label=label, color="grey", title="Unknown", hidden=True)
+        net.add_node(
+            node,
+            label=label,
+            color="grey",
+            title="Unknown",
+            hidden=True
+        )
 
 # Add edges with customized colors
 for source, target, data in graph.edges(data=True):
