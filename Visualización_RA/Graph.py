@@ -58,10 +58,21 @@ for node, data in graph.nodes(data=True):
     else:
         net.add_node(node, label=label, color="grey", title="Unknown", hidden=True)
 
+# Add edges with customized colors
 for source, target, data in graph.edges(data=True):
     edge_type = data.get("type", "unknown")
     importancia = data.get("importancia", "")
-    net.add_edge(source, target, color="blue", title=importancia, label=importancia)
+
+    # Set color based on edge type
+    if edge_type == "prerequisite":
+        # Use black for course prerequisite edges
+        net.add_edge(source, target, color="black", title=importancia, label=importancia)
+    elif edge_type == "has_objective":
+        # Use blue for objective edges
+        net.add_edge(source, target, color="blue", title=importancia, label=importancia)
+    elif edge_type == "objective_link":
+        # Use red for objective link edges
+        net.add_edge(source, target, color="red", title=importancia, label=importancia)
 
 # Set basic physics options
 net.set_options("""
@@ -204,61 +215,84 @@ network.on("click", function (params) {
                 edge.from === courseId || courseObjectives.some(obj => edge.from === obj.id || edge.to === obj.id)
             );
             network.body.data.edges.update(relevantEdges.map(edge => ({ id: edge.id, hidden: false })));
-        } else if (clickedNode.title === "Objective") {
-            // Handle objective click
-            let objectiveId = clickedNode.id;
+            } else if (clickedNode.title === "Objective") {
+                // Handle objective click
+                let objectiveId = clickedNode.id;
+                let parentCourseId = objectiveId.split("-")[0]; // Extract the parent course ID
 
-            // Find linked objectives and their courses
-            let linkedEdges = network.body.data.edges.get().filter(edge =>
-                edge.from === objectiveId || edge.to === objectiveId
-            );
-            let linkedNodes = new Set(linkedEdges.flatMap(edge => [edge.from, edge.to]));
+                // Find all objectives of the parent course
+                let courseObjectives = network.body.data.nodes.get().filter(node =>
+                    node.title === "Objective" && node.id.startsWith(parentCourseId + "-")
+                );
 
-            // Ensure linked objectives and their courses are visible
-            let nodesToShow = network.body.data.nodes.get().filter(node =>
-                linkedNodes.has(node.id) || (node.title === "Course" && linkedNodes.has(node.id))
-            );
+                // Hide all nodes initially
+                network.body.data.nodes.update(network.body.data.nodes.get().map(node => ({ id: node.id, hidden: true })));
 
-            // Add the course linked to the clicked objective
-            let parentCourse = network.body.data.nodes.get().find(node =>
-                node.title === "Course" && objectiveId.startsWith(node.id + "-")
-            );
-            if (parentCourse) {
-                nodesToShow.push(parentCourse);
+                // Show the clicked objective
+                network.body.data.nodes.update({ id: objectiveId, hidden: false });
+
+                // Show the parent course
+                network.body.data.nodes.update({ id: parentCourseId, hidden: false });
+
+                // Show objectives and courses linked to the clicked objective
+                let linkedEdges = network.body.data.edges.get().filter(edge =>
+                    edge.from === objectiveId || edge.to === objectiveId
+                );
+
+                // Collect linked nodes (objectives and courses)
+                let linkedNodes = new Set();
+                linkedEdges.forEach(edge => {
+                    linkedNodes.add(edge.from);
+                    linkedNodes.add(edge.to);
+                });
+
+                // Ensure linked objectives and their parent courses are visible
+                let nodesToShow = network.body.data.nodes.get().filter(node =>
+                    linkedNodes.has(node.id) || (node.title === "Course" && linkedNodes.has(node.id))
+                );
+
+                // Update visibility for linked objectives and their parent courses
+                nodesToShow.forEach(node => {
+                    if (node.title === "Objective") {
+                        let linkedParentCourseId = node.id.split("-")[0];
+                        network.body.data.nodes.update({ id: linkedParentCourseId, hidden: false });
+                    }
+                    network.body.data.nodes.update({ id: node.id, hidden: false });
+                });
+
+                // Ensure edges pointing from linked objectives to their parent courses are visible
+                let additionalEdges = [];
+                nodesToShow.forEach(node => {
+                    if (node.title === "Objective") {
+                        let linkedParentCourseId = node.id.split("-")[0];
+                        let edgeId = `${linkedParentCourseId}-${node.id}`;
+                        additionalEdges.push({
+                            from: linkedParentCourseId,
+                            to: node.id
+                        });
+                    }
+                });
+
+                // Combine original linked edges with parent-course edges
+                let allEdgesToShow = [...linkedEdges, ...additionalEdges];
+
+                // Update edges to show only the relevant ones
+                network.body.data.edges.update(network.body.data.edges.get().map(edge => ({
+                    id: edge.id,
+                    hidden: !allEdgesToShow.some(e => e.from === edge.from && e.to === edge.to),
+                })));
             }
 
-            // Add courses related to linked objectives
-            linkedNodes.forEach(linkedNodeId => {
-                let relatedCourse = network.body.data.nodes.get().find(node =>
-                    node.title === "Course" && linkedNodeId.startsWith(node.id + "-")
-                );
-                if (relatedCourse) {
-                    nodesToShow.push(relatedCourse);
-                }
-            });
-
-            // Hide everything else
-            network.body.data.nodes.update(network.body.data.nodes.get().map(node => ({
-                id: node.id,
-                hidden: !nodesToShow.some(n => n.id === node.id),
-            })));
-
-            // Update edges to show only the relevant ones
-            network.body.data.edges.update(defaultEdges.map(edge => ({
-                id: edge.id,
-                hidden: !linkedEdges.some(e => e.id === edge.id),
-            })));
-        }
     }
 });
 </script>
 """
 
-# Inject custom JavaScript into the HTML
-html_content = html_content.replace("</body>", custom_js + "</body>")
+# Inject JavaScript into the HTML
+html_content += custom_js
 
-# Save the updated HTML file
+# Save the modified HTML file
 with open(output_file, "w", encoding="utf-8") as file:
     file.write(html_content)
 
-print(f"Interactive graph with custom interactivity saved to {output_file}")
+print(f"Graph saved as {output_file}")
