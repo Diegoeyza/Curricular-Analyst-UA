@@ -110,15 +110,21 @@ let defaultEdges = network.body.data.edges.get().filter(edge => edge.title === "
 // Reset view to show only courses and their prerequisite edges
 function resetView() {
     // Show all courses
-    network.body.data.nodes.update(defaultCourses.map(node => ({ id: node.id, hidden: false })));
-    
-    // Show all prerequisite edges
-    network.body.data.edges.update(defaultEdges.map(edge => ({ id: edge.id, hidden: false })));
+    let allCourses = network.body.data.nodes.get().filter(node => node.title === "Course");
+    network.body.data.nodes.update(allCourses.map(node => ({ id: node.id, hidden: false })));
 
-    // Ensure objectives remain hidden
-    let objectives = network.body.data.nodes.get().filter(node => node.title === "Objective");
-    network.body.data.nodes.update(objectives.map(node => ({ id: node.id, hidden: true })));
+    // Hide all objectives
+    let allObjectives = network.body.data.nodes.get().filter(node => node.title === "Objective");
+    network.body.data.nodes.update(allObjectives.map(node => ({ id: node.id, hidden: true })));
+
+    // Show only prerequisite edges (course-to-course)
+    let allEdges = network.body.data.edges.get().map(edge => {
+        const isPrerequisite = edge.color === "black"; // Assuming black is used for prerequisite edges
+        return { id: edge.id, hidden: !isPrerequisite };
+    });
+    network.body.data.edges.update(allEdges);
 }
+
 
 // Add a reset button
 const resetButton = document.createElement("button");
