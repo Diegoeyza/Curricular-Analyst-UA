@@ -248,7 +248,7 @@ document.body.appendChild(suggestionsContainer);
 
 // Add a button to hide selected objective, its course, and objectives it depends on
 const hideObjectiveButton = document.createElement("button");
-hideObjectiveButton.innerText = "Hide Selected Objective and Dependencies";
+hideObjectiveButton.innerText = "Check Dependencies";
 
 // Style the button
 hideObjectiveButton.style.position = "absolute";
@@ -305,16 +305,25 @@ hideObjectiveButton.onclick = function () {
         ...dependentNodes.map(nodeId => ({ id: nodeId, hidden: false })) // Hide all nodes it depends on
     ]);
 
-    // Ensure edges leading to hidden nodes are hidden
+    // Ensure edges leading to visible nodes are hidden
     network.body.data.edges.update(incomingEdges.map(edge => ({ id: edge.id, hidden: false })));
 
-    // Keep visible outgoing edges and their targets
+    // Hide prerequisite nodes, their edges, and the associated courses
     const outgoingEdges = network.body.data.edges.get().filter(edge => edge.from === selectedNodeId);
     outgoingEdges.forEach(edge => {
+        const prerequisiteNodeId = edge.to;
         network.body.data.edges.update({ id: edge.id, hidden: true });
-        network.body.data.nodes.update({ id: edge.to, hidden: true }); // Ensure dependent nodes stay visible
+        network.body.data.nodes.update({ id: prerequisiteNodeId, hidden: true }); // Hide prerequisite nodes
+        
+        // Hide the course associated with the prerequisite node
+        const prerequisiteNode = network.body.data.nodes.get(prerequisiteNodeId);
+        if (prerequisiteNode && prerequisiteNodeId.split("-").length > 1) {
+            const courseId = prerequisiteNodeId.split("-")[0];
+            network.body.data.nodes.update({ id: courseId, hidden: true });
+        }
     });
 };
+
 
 
 // Function to show suggestions
