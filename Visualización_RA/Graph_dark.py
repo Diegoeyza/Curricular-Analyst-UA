@@ -84,7 +84,7 @@ for node, data in graph.nodes(data=True):
         net.add_node(
             node,
             label=label,
-            color="lightgreen",  # Bright green color for objectives
+            color="#90EE90",  # Bright green color for objectives
             title="Objective",  # Tooltip text
             font={
                 "size": 21,  # Font size for objectives
@@ -97,7 +97,7 @@ for node, data in graph.nodes(data=True):
             borderWidthSelected=4,  # Thicker when selected
             borderColor="green",  # Darker green border for emphasis
             shadow=True,  # Enable shadow for a 3D effect
-            hidden=True,  # Make it visible (hidden=True means not shown by default)
+            hidden=True,
         )
 
     else:
@@ -207,7 +207,8 @@ function updateCourseNodeFont() {
             face: 'arial', // Font face
             strokeWidth: 4, // Border width (black margin)
             strokeColor: 'white' // Border color
-        }
+        },
+        size: 40
     }));
 
     // Get all objective nodes
