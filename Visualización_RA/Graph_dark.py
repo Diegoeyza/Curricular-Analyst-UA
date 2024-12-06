@@ -4,7 +4,7 @@ import networkx as nx
 from pyvis.network import Network
 
 # Load the Excel file
-file_path = r"Curricular-Analyst-UA\Visualización_RA\data\RA Uandes.xlsx"
+file_path = r"C:\Users\diego\Github\Curricular-Analyst-UA\RA UandesFunctional.xlsx"
 general_df = pd.read_excel(file_path, sheet_name="general")
 requirements_df = pd.read_excel(file_path, sheet_name="requirements")
 objectives_df = pd.read_excel(file_path, sheet_name="objectives")
@@ -72,17 +72,34 @@ for node, data in graph.nodes(data=True):
             label=label,
             color="#1340bf",
             title="Course",
-            font={"size": 24}  # 100% bigger for courses
+            font={"size": 100},  # 100% bigger for courses
+            shape="hexagon",  # For rounded courses
+            borderWidth=3,  # Thicker border
+            borderWidthSelected=5,  # Even thicker when selected
+            borderColor="#004aad",  # A color that complements the main node color
+            shadow=True,
+            size=40,
         )
     elif node_type == "objective":
         net.add_node(
             node,
             label=label,
-            color="#7CFC00",  # Changed to stand out in dark mode
-            title="Objective",
-            hidden=True,
-            font={"size": 21, "multi": True}  # Larger and multiline for objectives
+            color="#7CFC00",  # Bright green color for objectives
+            title="Objective",  # Tooltip text
+            font={
+                "size": 21,  # Font size for objectives
+                "multi": True,  # Support multiline labels
+                "face": "Arial",  # Ensures consistent font style
+                "color": "white",  # Contrast with bright background
+            },
+            shape="ellipse",  # Default shape for objectives
+            borderWidth=4,  # Slightly thinner border than courses
+            borderWidthSelected=4,  # Thicker when selected
+            borderColor="#005f00",  # Darker green border for emphasis
+            shadow=True,  # Enable shadow for a 3D effect
+            hidden=True,  # Make it visible (hidden=True means not shown by default)
         )
+
     else:
         net.add_node(
             node,
@@ -96,6 +113,45 @@ for node, data in graph.nodes(data=True):
 for source, target, data in graph.edges(data=True):
     edge_type = data.get("type", "unknown")
     importancia = data.get("importancia", "")
+    
+    if edge_type == "prerequisite":
+        net.add_edge(
+            source,
+            target,
+            color="white",  # High contrast for dark backgrounds
+            title=importancia,
+            label=importancia,
+            width=5,  # Medium thickness
+            hoverWidth=6,  # Thicker when hovered
+            font={"size": 14, "color": "white"},  # Readable font
+        )
+    elif edge_type == "has_objective":
+        net.add_edge(
+            source,
+            target,
+            color="#FF7F11",  # Bright orange for objectives
+            title=importancia,
+            label=importancia,
+            width=3,  # Slightly thicker
+            hoverWidth=4,
+            font={"size": 14, "color": "#FF7F11"},  # Matching label color
+        )
+    elif edge_type == "objective_link":
+        net.add_edge(
+            source,
+            target,
+            color="red",  # Bright red for critical links
+            title=importancia,
+            label=importancia,
+            width=4,  # Thick edge for emphasis
+            hoverWidth=5,
+            font={"size": 14, "color": "black"},
+        )
+
+'''
+for source, target, data in graph.edges(data=True):
+    edge_type = data.get("type", "unknown")
+    importancia = data.get("importancia", "")
 
     if edge_type == "prerequisite":
         net.add_edge(source, target, color="white", title=importancia, label=importancia)  # White for better contrast
@@ -103,7 +159,7 @@ for source, target, data in graph.edges(data=True):
         net.add_edge(source, target, color="#FF7F11", title=importancia, label=importancia)  # Cyan for objective links
     elif edge_type == "objective_link":
         net.add_edge(source, target, color="red", title=importancia, label=importancia)  # Red for critical links
-
+'''
 
 # Set basic physics options
 net.set_options("""
@@ -137,6 +193,83 @@ custom_js = """
 <script type="text/javascript">
 let defaultCourses = network.body.data.nodes.get().filter(node => node.title === "Course");
 let defaultEdges = network.body.data.edges.get().filter(edge => edge.title === "Prerequisite");
+
+function updateCourseNodeFont() {
+    // Get all course nodes
+    const courseNodes = network.body.data.nodes.get().filter(node => node.title === "Course");
+
+    // Update the font size and border properties for each course node
+    const updatedCourseNodes = courseNodes.map(node => ({
+        id: node.id,
+        font: {
+            size: 25, // Set font size to 25 (adjust as needed)
+            color: 'black', // Text color
+            face: 'arial', // Font face
+            strokeWidth: 4, // Border width (black margin)
+            strokeColor: 'white' // Border color
+        }
+    }));
+
+    // Get all objective nodes
+    const objectiveNodes = network.body.data.nodes.get().filter(node => node.title === "Objective");
+
+    // Update the font size and border properties for each objective node
+    const updatedObjectiveNodes = objectiveNodes.map(node => ({
+        id: node.id,
+        font: {
+            size: 20, // Set font size to 20 (adjust as needed)
+            color: 'black', // Text color
+            face: 'arial', // Font face
+            strokeWidth: 2, // Border width (black margin)
+            strokeColor: 'white' // Border color
+        }
+    }));
+
+    // Apply the updates to the nodes in one call
+    network.body.data.nodes.update([...updatedCourseNodes, ...updatedObjectiveNodes]);
+}
+
+
+function isLoadingComplete() {
+    const loadingBar = document.getElementById('loadingBar');
+    if (loadingBar) {
+        // Check if the loading bar's opacity is set to 0 or width is 100% as a completion check
+        return loadingBar.style.opacity === '0' || loadingBar.style.width === '100%';
+    }
+    return false; // Return false if the element is not found
+}
+
+// Function to disable physics when loading is complete
+function disablePhysicsWhenLoaded() {
+    if (isLoadingComplete()) {
+        network.setOptions({
+            physics: {
+                enabled: false
+            }
+        });
+    } else {
+        // Wait and check again after a short delay
+        setTimeout(disablePhysicsWhenLoaded, 100); // Adjust the interval as needed
+    }
+}
+
+
+// Run when the window is loaded
+window.onload = function() {
+    // Wait for loading completion before disabling physics
+    disablePhysicsWhenLoaded();
+    updateCourseNodeFont();
+};
+
+// Add a timer to freeze the gravitational effect after 90 seconds (plan b)
+/* setTimeout(() => {
+    network.setOptions({
+        physics: {
+            enabled: false // Disable physics to prevent nodes from moving
+        }
+    });
+}, 90000); */
+
 
 // Reset view to show only courses and their prerequisite edges
 function resetView() {
@@ -189,15 +322,6 @@ resetButton.onmouseout = () => {
 resetButton.onclick = resetView;
 
 document.body.appendChild(resetButton);
-
-// Add a timer to freeze the gravitational effect after 10 seconds
-setTimeout(() => {
-    network.setOptions({
-        physics: {
-            enabled: false // Disable physics to prevent nodes from moving
-        }
-    });
-}, 90000);
 
 // Add a search input field
 const searchInput = document.createElement("input");

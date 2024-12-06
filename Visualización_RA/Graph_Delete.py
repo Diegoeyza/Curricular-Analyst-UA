@@ -4,7 +4,7 @@ import networkx as nx
 from pyvis.network import Network
 
 # Load the Excel file
-file_path = r"Curricular-Analyst-UA\Visualización_RA\data\RA Uandes.xlsx"
+file_path = r"C:\Users\diego\Github\Curricular-Analyst-UA\RA UandesFunctional.xlsx"
 general_df = pd.read_excel(file_path, sheet_name="general")
 requirements_df = pd.read_excel(file_path, sheet_name="requirements")
 objectives_df = pd.read_excel(file_path, sheet_name="objectives")
@@ -192,7 +192,7 @@ resetButton.onclick = resetView;
 
 document.body.appendChild(resetButton);
 
-// Add a timer to freeze the gravitational effect after 10 seconds
+// Add a timer to freeze the gravitational effect after 90 seconds
 setTimeout(() => {
     network.setOptions({
         physics: {
