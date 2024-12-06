@@ -84,7 +84,7 @@ for node, data in graph.nodes(data=True):
         net.add_node(
             node,
             label=label,
-            color="#7CFC00",  # Bright green color for objectives
+            color="lightgreen",  # Bright green color for objectives
             title="Objective",  # Tooltip text
             font={
                 "size": 21,  # Font size for objectives
@@ -95,7 +95,7 @@ for node, data in graph.nodes(data=True):
             shape="ellipse",  # Default shape for objectives
             borderWidth=4,  # Slightly thinner border than courses
             borderWidthSelected=4,  # Thicker when selected
-            borderColor="#005f00",  # Darker green border for emphasis
+            borderColor="green",  # Darker green border for emphasis
             shadow=True,  # Enable shadow for a 3D effect
             hidden=True,  # Make it visible (hidden=True means not shown by default)
         )
@@ -216,6 +216,8 @@ function updateCourseNodeFont() {
     // Update the font size and border properties for each objective node
     const updatedObjectiveNodes = objectiveNodes.map(node => ({
         id: node.id,
+        borderWidthSelected: 4, // Thicker when selected
+        borderColor: "green", // Darker green border for emphasis
         font: {
             size: 20, // Set font size to 20 (adjust as needed)
             color: 'black', // Text color
