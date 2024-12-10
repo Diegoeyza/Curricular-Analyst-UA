@@ -373,7 +373,7 @@ document.body.appendChild(suggestionsContainer);
 
 // Add a button to hide selected objective, its course, and objectives it depends on
 const hideObjectiveButton = document.createElement("button");
-hideObjectiveButton.innerText = "Check Dependencies";
+hideObjectiveButton.innerText = "Check Requisites";
 
 // Style the button
 hideObjectiveButton.style.position = "absolute";
@@ -425,12 +425,12 @@ hideObjectiveButton.onclick = function () {
 
     // Hide the selected objective node, its course, and the objectives it depends on
     network.body.data.nodes.update([
-        { id: selectedNodeId, hidden: false }, // Hide the selected objective
-        { id: parentCourseId, hidden: false }, // Hide the parent course
-        ...dependentNodes.map(nodeId => ({ id: nodeId, hidden: false })) // Hide all nodes it depends on
+        { id: selectedNodeId, hidden: false }, // Show the selected objective
+        { id: parentCourseId, hidden: false }, // Show the parent course
+        ...dependentNodes.map(nodeId => ({ id: nodeId, hidden: false })) // Show all nodes it depends on
     ]);
 
-    // Ensure edges leading to visible nodes are hidden
+    // Ensure edges leading to visible nodes are shown
     network.body.data.edges.update(incomingEdges.map(edge => ({ id: edge.id, hidden: false })));
 
     // Hide prerequisite nodes, their edges, and the associated courses
@@ -449,7 +449,102 @@ hideObjectiveButton.onclick = function () {
     });
 };
 
+// Add a second button to show/hide the opposite elements
+const showHideOppositeButton = document.createElement("button");
+showHideOppositeButton.innerText = "Check Dependencies";
 
+// Style the button
+showHideOppositeButton.style.position = "absolute";
+showHideOppositeButton.style.top = "50px"; // Positioned below the first button
+showHideOppositeButton.style.right = "10px";
+showHideOppositeButton.style.zIndex = "1000";
+showHideOppositeButton.style.padding = "10px 20px";
+showHideOppositeButton.style.fontSize = "16px";
+showHideOppositeButton.style.backgroundColor = "#dc3545"; // Bootstrap's success color
+showHideOppositeButton.style.color = "white";
+showHideOppositeButton.style.border = "2px solid white";
+showHideOppositeButton.style.marginTop = "10px";
+showHideOppositeButton.style.borderRadius = "5px";
+showHideOppositeButton.style.cursor = "pointer";
+showHideOppositeButton.style.transition = "background-color 0.3s, transform 0.2s";
+
+// Hover effect
+showHideOppositeButton.onmouseover = () => {
+    showHideOppositeButton.style.backgroundColor = "#a71d2a"; // Darker green on hover
+    showHideOppositeButton.style.transform = "scale(1.05)";
+};
+
+showHideOppositeButton.onmouseout = () => {
+    showHideOppositeButton.style.backgroundColor = "#dc3545"; // Original green color
+    showHideOppositeButton.style.transform = "scale(1)";
+};
+
+document.body.appendChild(showHideOppositeButton);
+
+// Function to show/hide the opposite of the selected objective and its dependencies
+showHideOppositeButton.onclick = function () {
+    const selectedNodes = network.getSelectedNodes();
+    if (selectedNodes.length === 0) {
+        alert("Please select an objective node first.");
+        return;
+    }
+
+    const selectedNodeId = selectedNodes[0];
+    const selectedNode = network.body.data.nodes.get(selectedNodeId);
+
+    if (selectedNode.title !== "Objective") {
+        alert("Please select an objective node.");
+        return;
+    }
+
+    const parentCourseId = selectedNodeId.split("-")[0];
+
+    // Find all nodes that the selected node depends on (incoming edges)
+    const incomingEdges = network.body.data.edges.get().filter(edge => edge.to === selectedNodeId);
+    const prerequisiteNodes = incomingEdges.map(edge => edge.from);
+
+    // Find all nodes linked to the selected node (outgoing edges)
+    const outgoingEdges = network.body.data.edges.get().filter(edge => edge.from === selectedNodeId);
+    const linkedNodes = outgoingEdges.map(edge => edge.to);
+
+    // Find the edge connecting the parent course and the selected objective
+    const courseEdge = network.body.data.edges.get().find(edge => edge.from === parentCourseId && edge.to === selectedNodeId);
+
+    // Update visibility of nodes and edges
+    network.body.data.nodes.update([
+        { id: selectedNodeId, hidden: false }, // Show the selected objective
+        { id: parentCourseId, hidden: false }, // Show the parent course
+        ...prerequisiteNodes.map(nodeId => ({ id: nodeId, hidden: true })), // Hide prerequisite nodes
+        ...linkedNodes.map(nodeId => ({ id: nodeId, hidden: false })) // Show nodes linked to the selected objective
+    ]);
+
+    network.body.data.edges.update([
+        ...incomingEdges.map(edge => ({ id: edge.id, hidden: true })), // Hide incoming edges
+        ...outgoingEdges.map(edge => ({ id: edge.id, hidden: false })), // Show outgoing edges
+        courseEdge ? { id: courseEdge.id, hidden: false } : null // Ensure course-objective edge is shown
+    ].filter(Boolean)); // Remove null entries
+
+    // Ensure associated courses for prerequisites are hidden
+    prerequisiteNodes.forEach(prerequisiteNodeId => {
+        const prerequisiteNode = network.body.data.nodes.get(prerequisiteNodeId);
+        if (prerequisiteNode && prerequisiteNodeId.split("-").length > 1) {
+            const courseId = prerequisiteNodeId.split("-")[0];
+            network.body.data.nodes.update({ id: courseId, hidden: true });
+        }
+    });
+
+    // Ensure associated courses for linked nodes are shown
+    linkedNodes.forEach(linkedNodeId => {
+        const linkedNode = network.body.data.nodes.get(linkedNodeId);
+        if (linkedNode && linkedNodeId.split("-").length > 1) {
+            const courseId = linkedNodeId.split("-")[0];
+            network.body.data.nodes.update({ id: courseId, hidden: false });
+        }
+    });
+
+    // Ensure the course of the selected node is always shown
+    network.body.data.nodes.update({ id: parentCourseId, hidden: false });
+};
 
 // Function to show suggestions
 function showSuggestions(matches) {
