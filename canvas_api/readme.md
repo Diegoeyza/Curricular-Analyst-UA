@@ -4,6 +4,14 @@ This guide provides step-by-step instructions to access and utilize the **DAP AP
 
 ---
 
+## Requirements
+
+You need to have installed the Canvas API, if you do not have it you can get it like this:
+```powershell
+pip3 install "instructure-dap-client[postgresql]"
+```
+
+
 ## 1. Setting Environment Variables
 
 Before you can interact with the DAP API, you need to set up the necessary environment variables. Follow these steps:
