@@ -4,7 +4,7 @@ import networkx as nx
 from pyvis.network import Network
 
 # Load the Excel file
-file_path = r"C:\Users\diego\Github\Curricular-Analyst-UA\RA UandesFunctional.xlsx"
+file_path = r"C:\Users\diego\Downloads\RA UandesFunctional (2).xlsx"
 general_df = pd.read_excel(file_path, sheet_name="general")
 requirements_df = pd.read_excel(file_path, sheet_name="requirements")
 objectives_df = pd.read_excel(file_path, sheet_name="objectives")
@@ -55,7 +55,7 @@ for _, row in ra_links_df.iterrows():
     importancia = row['Importancia']
     source_node = f"{course_id}-{objective_id}"
     target_node = f"{linked_course_id}-{linked_objective_id}"
-    graph.add_edge(source_node, target_node, type="objective_link", importancia=importancia)
+    graph.add_edge(target_node, source_node, type="objective_link", importancia=importancia)
 
 # Create an interactive Pyvis network
 net = Network(height="1000px", width="100%", directed=True, bgcolor="#1e1e1e", font_color="white")
