@@ -19,7 +19,7 @@ Este proyecto permite crear un formulario interactivo en Google Sheets utilizand
 1. En la interfaz de Apps Script, borra cualquier código existente en `Code.gs`.
 2. Crea los siguientes archivos y copia el contenido correspondiente:
 
-   - **`Code.gs`**: Contiene la lógica principal del servidor.
+   - **`Code.gs`**: Contiene la lógica principal del servidor (en github es Code.js).
    - **`forms.html`**: Contiene el diseño y la lógica del formulario interactivo.
 
 ### 3. Configurar la Hoja de Cálculo
@@ -32,7 +32,7 @@ Curso, LLAVE, SECCIONES, HabilidadesTransversales, SignificadoHT, Implementacion
 
 - Llena los datos correspondientes a los cursos en las filas siguientes.
 
-### 6. Implementar el Proyecto
+### 4. Implementar el Proyecto
 
 1. En Apps Script, ve a **Implementar > Nueva implementación**.
 2. Selecciona **Aplicación web**.
@@ -42,7 +42,7 @@ Curso, LLAVE, SECCIONES, HabilidadesTransversales, SignificadoHT, Implementacion
 4. Haz clic en **Implementar**.
 5. Copia la URL proporcionada.
 
-### 7. Uso del Formulario
+### 5. Uso del Formulario
 
 - Comparte la URL con los usuarios o insértala en un sitio web.
 - Los usuarios podrán interactuar con el formulario, seleccionar un curso y guardar sus respuestas.
