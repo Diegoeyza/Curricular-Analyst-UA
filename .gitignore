@@ -4,3 +4,4 @@ venv
 *.pyc
 *.xlsx
 *.html
+!form.html
