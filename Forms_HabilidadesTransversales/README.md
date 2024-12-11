@@ -27,7 +27,7 @@ Este proyecto permite crear un formulario interactivo en Google Sheets utilizand
 La hoja principal debe tener las siguientes columnas en la primera fila (no es necesario que estén en orden):
 
 ```
-Curso, LLAVE, SECCIONES, HabilidadesTransversales, SignificadoHT, Implementacion, QuienEvalua
+Curso, LLAVE, SECCIONES, Habilidades Transversales, Significado HT a medir, Implementación, ¿Quién evalúa?
 ```
 
 - Llena los datos correspondientes a los cursos en las filas siguientes.
