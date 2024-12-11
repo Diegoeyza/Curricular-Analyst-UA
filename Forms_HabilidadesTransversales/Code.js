@@ -55,7 +55,7 @@ function doGet() {
     // Create the sheet if it doesn't exist
     if (!sheet) {
       sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet(sheetName);
-      sheet.appendRow(['LLAVE', 'SECCIONES', 'Habilidades Transversales', 'Significado HT a medir', 'Implementación', '¿Quién evalúa?', 'instrumento', '¿Cuántas veces durante el semestre se evalúa la HT?', 'comentarios']);
+      sheet.appendRow(['LLAVE', 'SECCIONES', 'Habilidades Transversales', 'Significado HT a medir', 'Implementación', '¿Quién evalúa?', 'instrumento', '¿Cuántas veces durante el semestre se evalúa la HT?', '¿En qué meses se evalúa la HT?']);
     }
   
     // Append the response to the sheet

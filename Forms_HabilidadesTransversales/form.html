@@ -22,7 +22,7 @@
         font-size: 2rem;
       }
 
-      #courseSelection, #evaluationForm, #goodbyeScreen {
+      #courseSelection, #evaluationForm, #goodbyeScreen, #loadingScreen {
         background-color: #fff;
         padding: 20px;
         border-radius: 8px;
@@ -87,7 +87,7 @@
         background-color: #e9e9e9;
       }
 
-      #loadingMessage {
+      #loadingMessage, #loadingScreen {
         font-size: 1.2rem;
         color: #ff9800;
         text-align: center;
@@ -95,6 +95,21 @@
 
       .hidden {
         display: none;
+      }
+
+      .spinner {
+        margin: 20px auto;
+        width: 50px;
+        height: 50px;
+        border: 6px solid #ccc;
+        border-top: 6px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
     </style>
   </head>
@@ -148,16 +163,22 @@
           </select>
         </p>
 
-        <p>Comentarios adicionales:</p>
-        <textarea id="comments" placeholder="Escriba cualquier comentario adicional..."></textarea>
+        <p>¿En qué mes/meses será medida la habilidad transversal?:</p>
+        <textarea id="comments" placeholder=" Ejemplo: Marzo, Abril, Junio"></textarea>
 
         <button onclick="saveResponses()">Guardar</button>
+      </div>
+
+      <!-- Loading Screen -->
+      <div id="loadingScreen" class="hidden">
+        <div class="spinner"></div>
+        <p>Guardando sus respuestas, por favor espere...</p>
       </div>
 
       <!-- Goodbye Screen -->
       <div id="goodbyeScreen" class="hidden">
         <h2>Gracias por completar el formulario</h2>
-        <p>Sus respuestas han sido guardadas correctamente, si quiere agregar algún otro curso, por favor recargar la página</p>
+        <p>Sus respuestas han sido guardadas correctamente. Si desea realizar otro curso por favor recargue la página.</p>
       </div>
     </div>
 
@@ -225,16 +246,23 @@
         const response = {
           LLAVE: courseData[0]?.LLAVE || '',
           SECCIONES: courseData[0]?.SECCIONES || '',
+          HabilidadesTransversales: courseData[0]?.HabilidadesTransversales || '',
+          SignificadoHT: courseData[0]?.SignificadoHT || '',
+          Implementacion: courseData[0]?.Implementacion || '',
+          QuienEvalua: courseData[0]?.QuienEvalua || '',
           instrumento: document.getElementById('instrument').value,
           evaluations: document.getElementById('evaluations').value,
           comentarios: document.getElementById('comments').value
         };
 
+        document.getElementById('evaluationForm').classList.add('hidden');
+        document.getElementById('loadingScreen').classList.remove('hidden');
+
         google.script.run.withSuccessHandler(showGoodbyeScreen).saveResponses(response);
       }
 
       function showGoodbyeScreen() {
-        document.getElementById('evaluationForm').classList.add('hidden');
+        document.getElementById('loadingScreen').classList.add('hidden');
         document.getElementById('goodbyeScreen').classList.remove('hidden');
       }
     </script>
