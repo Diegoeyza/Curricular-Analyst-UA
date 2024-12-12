@@ -126,10 +126,11 @@ function updateLearningObjectivesDropdown(e) {
 
           // If there are learning objectives for the selected course, apply them as a dropdown to B2
           if (filteredObjectives.length > 0) {
-              var objectiveRule = SpreadsheetApp.newDataValidation()
-                          .requireValueInList(filteredObjectives)
-                          .build();
-              dropdownSheet.getRange(2, 2).setDataValidation(objectiveRule);
+            dropdownSheet.getRange(2, 2).setValue("") //Clearing the cell as suggested
+            var objectiveRule = SpreadsheetApp.newDataValidation()
+                        .requireValueInList(filteredObjectives)
+                        .build();
+            dropdownSheet.getRange(2, 2).setDataValidation(objectiveRule);
           } else {
               // If no objectives are found, clear the validation for B2
               dropdownSheet.getRange(2, 2).clearDataValidations();
@@ -274,6 +275,7 @@ if (sheet.getName() === "Course Dropdown" && range.getA1Notation() === "D2") {
 
   // If there are learning objectives for the selected requirement, apply them as a dropdown to E2
   if (filteredObjectivesFromRequirement.length > 0) {
+    sheet.getRange(2, 5).setValue("") //clear the objs when updating the course
     var objectiveRule = SpreadsheetApp.newDataValidation()
                     .requireValueInList(filteredObjectivesFromRequirement)
                     .build();
