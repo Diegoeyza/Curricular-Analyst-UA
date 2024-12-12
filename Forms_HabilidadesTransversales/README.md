@@ -47,6 +47,10 @@ Curso, LLAVE, SECCIONES, Habilidades Transversales, Significado HT a medir, Impl
 - Comparte la URL con los usuarios o insértala en un sitio web.
 - Los usuarios podrán interactuar con el formulario, seleccionar un curso y guardar sus respuestas.
 
+### 6. Traspaso de Respuestas
+
+Para traspasar las respuestas, se incluye un código llamado `AddResponses.gs`, el cual se debe copiar y pegar a un nuevo script en el mismo Spreadhseet. Luego de haberlo agregado, recargar el Spreadsheet. Al recargarlo debiera aparecer un menú en la barra superior llamado `Actions`, el cual tiene la opción `Update Data from Responses` y al seleccionarla se actualiza la hoja principal (1° hoja) con las respuestas del Forms hasta el momento
+
 ## Soporte
 
 Si tienes alguna pregunta o problema, abre un issue o contacta al administrador.
