@@ -111,6 +111,28 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
+
+      .choices {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .choices li {
+        padding: 8px;
+        background-color: #f9f9f9;
+        margin: 5px 0;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+      }
+
+      .choices li:hover {
+        background-color: #e9e9e9;
+      }
+
+      .choices input[type="radio"] {
+        margin-right: 10px;
+      }
     </style>
   </head>
   <body>
@@ -135,7 +157,38 @@
         <h2>Formulario</h2>
 
         <p>¿Qué instrumento va a utilizar para evaluar la HT?</p>
-        <input id="instrument" type="text" placeholder="Ej. Informe, tarea, prueba..." />
+        <ul id="instrumentOptions" class="choices">
+          <li>
+            <label>
+              <input type="radio" name="instrument" value="Informe"> Informe
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="radio" name="instrument" value="Tarea"> Tarea
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="radio" name="instrument" value="Prueba"> Prueba
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" name="instrument" value="Otros" id="otrosOption" onchange="toggleOtherInput()"> Otros
+            </label>
+            <!-- Hidden input for "Otros" -->
+            <input type="text" id="otherInput" placeholder="Especifique otro instrumento" style="display:none; margin-top:10px;" />
+          </li>
+        </ul>
+
+        <p>
+          <label for="evaluationType">¿Las evaluaciones van a ser de a uno o en grupo?</label>
+          <select id="evaluationType" name="evaluationType">
+            <option value="de a uno">De a uno</option>
+            <option value="en grupo">En grupo</option>
+          </select>
+        </p>
 
         <p>
           <label for="evaluations">¿Cuántas veces durante el semestre se evalúa la HT?</label>
@@ -163,8 +216,9 @@
           </select>
         </p>
 
+
         <p>¿En qué mes/meses será medida la habilidad transversal?:</p>
-        <textarea id="comments" placeholder=" Ejemplo: Marzo, Abril, Junio"></textarea>
+        <textarea id="comments" placeholder="Ejemplo: Marzo, Abril, Junio"></textarea>
 
         <button onclick="saveResponses()">Guardar</button>
       </div>
@@ -192,6 +246,18 @@
         }
       }
 
+      // Toggle visibility of the text input for "Otros" option
+      function toggleOtherInput() {
+        const otherInput = document.getElementById('otherInput');
+        const otrosOption = document.getElementById('otrosOption');
+        if (otrosOption.checked) {
+          otherInput.style.display = 'block';
+        } else {
+          otherInput.style.display = 'none';
+          otherInput.value = ''; // Clear the text input when unchecked
+        }
+      }
+
       function showRecommendations(recommendations) {
         document.getElementById('loadingMessage').style.display = 'none';
         const list = document.getElementById('recommendationList');
@@ -216,7 +282,7 @@
           courseData = data;
           const course = data[0];
           const display = document.getElementById('courseDetails');
-          display.innerHTML = `
+          display.innerHTML = ` 
             <p>
               El curso ${course.LLAVE} sección ${course.SECCIONES} tiene la siguiente habilidad transversal:
             </p>
@@ -243,6 +309,20 @@
           return;
         }
 
+        // Collect all selected checkboxes
+        const selectedOptions = Array.from(
+          document.querySelectorAll('input[name="instrument"]:checked')
+        ).map(option => option.value);
+
+        // Include "Otros" input if it has been checked and has a value
+        const otherInput = document.getElementById('otherInput');
+        if (selectedOptions.includes('Otros') && otherInput.value.trim()) {
+          selectedOptions[selectedOptions.indexOf('Otros')] = otherInput.value.trim();
+        }
+
+        // Get the evaluation type (de a uno or en grupo)
+        const evaluationType = document.getElementById('evaluationType').value;
+
         const response = {
           LLAVE: courseData[0]?.LLAVE || '',
           SECCIONES: courseData[0]?.SECCIONES || '',
@@ -250,10 +330,14 @@
           SignificadoHT: courseData[0]?.SignificadoHT || '',
           Implementacion: courseData[0]?.Implementacion || '',
           QuienEvalua: courseData[0]?.QuienEvalua || '',
-          instrumento: document.getElementById('instrument').value,
+          instrumentos: selectedOptions.join(', '),
+          evaluationType: evaluationType,
           evaluations: document.getElementById('evaluations').value,
           comentarios: document.getElementById('comments').value
         };
+
+        console.log("response")
+        console.log(response)
 
         document.getElementById('evaluationForm').classList.add('hidden');
         document.getElementById('loadingScreen').classList.remove('hidden');

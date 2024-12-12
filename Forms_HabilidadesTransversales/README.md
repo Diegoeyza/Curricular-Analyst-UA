@@ -24,7 +24,7 @@ Este proyecto permite crear un formulario interactivo en Google Sheets utilizand
 
 ### 3. Configurar la Hoja de Cálculo
 
-La hoja principal debe tener las siguientes columnas en la primera fila (no es necesario que estén en orden):
+La hoja principal debe estar en el 1° lugar del spreadhseet y tener las siguientes columnas en la primera fila (no es necesario que estén en orden):
 
 ```
 Curso, LLAVE, SECCIONES, Habilidades Transversales, Significado HT a medir, Implementación, ¿Quién evalúa?

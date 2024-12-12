@@ -3,7 +3,7 @@ function doGet() {
   }
   
   function getRecommendations(input) {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('CourseData');
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
     const data = sheet.getDataRange().getValues();
     const headers = data[0];
     const llaveIndex = headers.indexOf('LLAVE'); // Get the column index for LLAVE
@@ -15,7 +15,7 @@ function doGet() {
   }
   
   function getCourseData(courseName) {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('CourseData');
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
     const data = sheet.getDataRange().getValues();
     const headers = data[0];
   
@@ -55,8 +55,9 @@ function doGet() {
     // Create the sheet if it doesn't exist
     if (!sheet) {
       sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet(sheetName);
-      sheet.appendRow(['LLAVE', 'SECCIONES', 'Habilidades Transversales', 'Significado HT a medir', 'Implementación', '¿Quién evalúa?', 'instrumento', '¿Cuántas veces durante el semestre se evalúa la HT?', '¿En qué meses se evalúa la HT?']);
+      sheet.appendRow(['LLAVE', 'SECCIONES', 'Habilidades Transversales', 'Significado HT a medir', 'Implementación', '¿Quién evalúa?', 'instrumento', 'Solo o en grupo', '¿Cuántas veces durante el semestre se evalúa la HT?', '¿En qué meses se evalúa la HT?']);
     }
+
   
     // Append the response to the sheet
     sheet.appendRow([
@@ -66,7 +67,8 @@ function doGet() {
       response.SignificadoHT,
       response.Implementacion,
       response.QuienEvalua,
-      response.instrumento,
+      response.instrumentos,
+      response.evaluationType,
       response.evaluations,
       response.comentarios
     ]);
