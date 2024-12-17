@@ -7,8 +7,8 @@ Welcome to the **Curricular Analysis Tools Repository**! This collection of tool
 
 ## Available Tools
 
-### 1. **Análisis Curricular**
-This section contains three distinct tools to facilitate curriculum data extraction and processing:
+### 1. **Proyecto RA**
+This section contains five distinct tools to facilitate curriculum data extraction and processing:
 
 #### a. **Syllabus Extractor**
 - **Purpose:** Extracts all data from syllabi (PDF documents containing course information).
@@ -31,6 +31,20 @@ This section contains three distinct tools to facilitate curriculum data extract
 - **How It Works:**
   - Enables querying of linked course objectives.
   - Ideal for detailed curriculum analysis and reporting.
+
+#### d. **Django App**
+- **Purpose:** Hosts and deploys an app capable of displaying predefined queries from the database.
+- **How It Works:**
+  - Connects to the database dynamically.
+  - Created to make getting data from the database easier and more direct.
+  - Mainly aimed towards users.
+
+#### e. **Report Creator**
+- **Purpose:** Creates xlsx reports for the administrator, based on predefined queries.
+- **How It Works:**
+  - Enables adding queries to download as xlsx.
+  - The admin has full control of the interface.
+  - The connection to the database is dynamic.
 
 ---
 
@@ -102,7 +116,19 @@ This folder includes two tools:
 
 ---
 
-### 8. **Horarios Curso (Course Timetables)**
+### 8. **Habilidades Transversales Filler**
+- **Purpose:** Automates the creation of the Habilidades Transversales google sheet.
+- **How It Works:**
+  - Reads data from a remote Google Spreadsheet to add it to the active one.
+  - Evaluates posible combinations of HT and adds them to a dictionary.
+  - Supports adding columns to the sheet.
+- **Additional Features:**
+  - Is able to send mails to all of the users with the forms from point 7.
+  - Supports mail configuration for each particular course.
+
+---
+
+### 9. **Horarios Curso (Course Timetables)**
 - **Purpose:** Converts unformatted Excel sheets into structured timetables for each semester.
 - **How It Works:**
   - Processes Excel files with multiple sheets of inconsistent formatting.
