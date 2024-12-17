@@ -4,32 +4,37 @@ import networkx as nx
 from pyvis.network import Network
 
 # Load the Excel file
-file_path = r"C:\Users\diego\Downloads\RA UandesFunctional (2).xlsx"
+file_path = r"C:\Users\diego\OneDrive\Documentos\Pythonhw\.vs\Curricular_analyst_UA\postgres_export.xlsx"
+# Load and normalize column headers to lowercase for all DataFrames
 general_df = pd.read_excel(file_path, sheet_name="general")
+general_df.columns = [col.lower() for col in general_df.columns]
 requirements_df = pd.read_excel(file_path, sheet_name="requirements")
+requirements_df.columns = [col.lower() for col in requirements_df.columns]
 objectives_df = pd.read_excel(file_path, sheet_name="objectives")
+objectives_df.columns = [col.lower() for col in objectives_df.columns]
 ra_links_df = pd.read_excel(file_path, sheet_name="RA_Links")
+ra_links_df.columns = [col.lower() for col in ra_links_df.columns]
 
 # Create a directed graph
 graph = nx.DiGraph()
 
 # Add courses as nodes
 for _, row in general_df.iterrows():
-    course_id = row['ID']
-    course_name = row['Nombre']
+    course_id = row['id']
+    course_name = row['nombre']
     graph.add_node(course_id, label=course_name, type="course")
 
 # Add prerequisites as edges
 for _, row in requirements_df.iterrows():
-    course_id = row['ID']
-    prereq_id = row['ID_Requisito']
+    course_id = row['id']
+    prereq_id = row['id_requisito']
     graph.add_edge(prereq_id, course_id, type="prerequisite")
 
 # Add course objectives as nodes
 for _, row in objectives_df.iterrows():
-    course_id = row['ID']
-    objective_id = row['ID_Objetivo']
-    objective_name = row['Objetivo']
+    course_id = row['id']
+    objective_id = row['id_objetivo']
+    objective_name = row['objetivo']
 
     # Ensure objective_name is a string and handle missing values
     if pd.isna(objective_name):
@@ -48,11 +53,11 @@ for _, row in objectives_df.iterrows():
 
 # Add objective links as edges
 for _, row in ra_links_df.iterrows():
-    course_id = row['ID']
-    objective_id = row['ID_Objetivo']
-    linked_course_id = row['ID_Prerequisito']
-    linked_objective_id = row['ID_Objetivo_Prerrequisito']
-    importancia = row['Importancia']
+    course_id = row['id']
+    objective_id = row['id_objetivo']
+    linked_course_id = row['id_prerrequisito']
+    linked_objective_id = row['id_objetivo_prerrequisito']
+    importancia = row['importancia']
     source_node = f"{course_id}-{objective_id}"
     target_node = f"{linked_course_id}-{linked_objective_id}"
     graph.add_edge(target_node, source_node, type="objective_link", importancia=importancia)

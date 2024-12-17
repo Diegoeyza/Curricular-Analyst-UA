@@ -13,13 +13,13 @@ CREATE TABLE IF NOT EXISTS RA_Links (
     ID TEXT NOT NULL,
     ID_Objetivo TEXT NOT NULL,
     Importancia TEXT NOT NULL,
-    ID_Prerequisito TEXT,
-    ID_Objetivo_Prerequisito TEXT,
+    ID_Prerrequisito TEXT,
+    ID_Objetivo_Prerrequisito TEXT,
     FOREIGN KEY (ID) REFERENCES Courses(ID),
     FOREIGN KEY (ID_Objetivo) REFERENCES Objectives(ID_Objetivo),
-    FOREIGN KEY (ID_Prerequisito) REFERENCES Courses(ID),
-    FOREIGN KEY (ID_Objetivo_Prerequisito) REFERENCES Objectives(ID_Objetivo),
-    PRIMARY KEY (ID, ID_Objetivo, ID_Prerequisito, ID_Objetivo_Prerequisito)
+    FOREIGN KEY (ID_Prerrequisito) REFERENCES Courses(ID),
+    FOREIGN KEY (ID_Objetivo_Prerrequisito) REFERENCES Objectives(ID_Objetivo),
+    PRIMARY KEY (ID, ID_Objetivo, ID_Prerrequisito, ID_Objetivo_Prerrequisito)
 );
 """
 
