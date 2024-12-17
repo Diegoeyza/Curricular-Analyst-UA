@@ -29,7 +29,7 @@ The code assumes you have an Excel file (`RA Uandes.xlsx`) containing the follow
 - `objectives`: objectives of the courses.
 - `RA_Links`: links between objectives and their importance.
 
-Ensure that the Excel file is located in the specified path (`Curricular-Analyst-UA\Visualización_RA\data\RA Uandes.xlsx`), or adjust the path in the code as needed.
+Ensure that the Excel file is located in the specified path in `Graph_dark.py`, at line 7. The Excel can be generated using `excel_generator.py`, it extracts all of the tables from a database and converts each table into an excel sheet.
 
 ### 2. Running the Script
 Run the Python script to generate the interactive graph:
