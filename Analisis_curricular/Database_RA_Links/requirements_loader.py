@@ -7,9 +7,9 @@ conn = psycopg2.connect(
 )
 cur = conn.cursor()
 
-# SQL statement to create the Requierements table
-create_requierements_table_sql = """
-CREATE TABLE IF NOT EXISTS Requierements (
+# SQL statement to create the requirements table
+create_requirements_table_sql = """
+CREATE TABLE IF NOT EXISTS requirements (
     ID TEXT NOT NULL,
     ID_Requisito TEXT NOT NULL,
     FOREIGN KEY (ID) REFERENCES Courses(ID),
@@ -18,13 +18,13 @@ CREATE TABLE IF NOT EXISTS Requierements (
 );
 """
 
-# Create the Requierements table
-cur.execute(create_requierements_table_sql)
+# Create the requirements table
+cur.execute(create_requirements_table_sql)
 conn.commit()
-print("Requierements table created successfully.")
+print("requirements table created successfully.")
 
-# Function to load data into the Requierements table from a CSV file
-def load_requierements_from_csv(csv_file):
+# Function to load data into the requirements table from a CSV file
+def load_requirements_from_csv(csv_file):
     error_count = 0  # Counter for rows that could not be added
     count=0
     count2=0
@@ -33,20 +33,20 @@ def load_requierements_from_csv(csv_file):
         next(reader)  # Skip the header row
         for row in reader:
             count+=1
-            # Insert data into the Requierements table
+            # Insert data into the requirements table
             cur.execute(
-                "INSERT INTO Requierements (ID, ID_Requisito) VALUES (%s, %s)",
+                "INSERT INTO requirements (ID, ID_Requisito) VALUES (%s, %s)",
                 (row[0].strip(), row[1].strip()),
                 )
     conn.commit()
-    print(f"Data loaded into the Requierements table from {csv_file}.")
+    print(f"Data loaded into the requirements table from {csv_file}.")
     print(f"Number of rows that could not be added: {error_count}")
     print(count)
     print(count2)
 
 # Example usage
 csv_file = r"Curricular-Analyst-UA\Análisis_curricular\Database RA_Links\requirements.csv"  # Path to your CSV file
-load_requierements_from_csv(csv_file)
+load_requirements_from_csv(csv_file)
 
 # Close the connection
 cur.close()

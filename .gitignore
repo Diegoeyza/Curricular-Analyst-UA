@@ -5,3 +5,5 @@ venv
 *.xlsx
 *.html
 !form.html
+*.env
+!Análisis_curricular/django_app/RA_query_app/course_management/templates/*.html
