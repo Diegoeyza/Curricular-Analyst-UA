@@ -198,6 +198,8 @@ function updateLearningObjectivesDropdown(e) {
       }).map(function(row) {
           return row[2]; // Get the requirement from column 3 (index 2)
       });
+      //add the course itself to the requirements as if it was a requirement
+      filteredRequirements.unshift(sheet.getRange(2, 1).getValue());
 
       // If there are requirements for the selected Course ID, add them to dropdown in D2
       if (filteredRequirements.length > 0) {
