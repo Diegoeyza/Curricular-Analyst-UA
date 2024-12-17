@@ -18,6 +18,19 @@ def connect_db():
         messagebox.showerror("Database Connection Error", f"Error connecting to the database: {e}")
         return None
 
+def user_input(data, base_query):
+    if data:
+        if data.isdigit():
+            # If the input is a number, filter by course ID (c.id)
+            query = f"{base_query} WHERE c.id = {data}"
+        else:
+            # Otherwise, filter by course name (c.nombre)
+            query = f"{base_query} WHERE c.nombre = '{data}'"
+    else:
+        query = base_query  # If no input, don't apply any filtering
+    return query
+
+
 # Function to execute queries
 def execute_query(query):
     connection = connect_db()
@@ -122,16 +135,7 @@ def query_4():
         objectives oo ON rl.id_objetivo_prerequisito = oo.id_objetivo
     """
     
-    # Add filtering condition if the user has provided input for course name or ID
-    if course_input:
-        if course_input.isdigit():
-            # If the input is a number, filter by course ID (c.id)
-            query = f"{base_query} WHERE c.id = {course_input}"
-        else:
-            # Otherwise, filter by course name (c.nombre)
-            query = f"{base_query} WHERE c.nombre ILIKE '%{course_input}%'"
-    else:
-        query = base_query  # If no input, don't apply any filtering
+    query=user_input(course_input,base_query)
 
     df = execute_query(query)
     show_results(df)
@@ -158,15 +162,7 @@ def query_5():
     """
     
     # Add filtering condition if the user has provided input for course name or ID
-    if course_input:
-        if course_input.isdigit():
-            # If the input is a number, filter by course ID (c.id)
-            query = f"{base_query} AND c.id = {course_input}"
-        else:
-            # Otherwise, filter by course name (c.nombre)
-            query = f"{base_query} AND c.nombre ILIKE '%{course_input}%'"
-    else:
-        query = base_query  # If no input, don't apply any filtering
+    query=user_input(course_input,base_query)
 
     query += " GROUP BY c.nombre ORDER BY cantidad_obj DESC;"
 
@@ -197,15 +193,7 @@ def query_6():
     """
     
     # Add filtering condition if the user has provided input for course name or ID
-    if course_input:
-        if course_input.isdigit():
-            # If the input is a number, filter by course ID (c.id) and prerequisites (ro.id)
-            query = f"{base_query} WHERE ro.id = {course_input} OR c.id = {course_input}"
-        else:
-            # Otherwise, filter by course name (c.nombre) and prerequisites (ro.nombre)
-            query = f"{base_query} WHERE ro.nombre ILIKE '%{course_input}%' OR c.nombre ILIKE '%{course_input}%'"
-    else:
-        query = base_query  # If no input, don't apply any filtering
+    query=user_input(course_input,base_query)
 
     df = execute_query(query)
     show_results(df)
