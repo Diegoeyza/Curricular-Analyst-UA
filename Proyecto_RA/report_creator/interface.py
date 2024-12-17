@@ -243,10 +243,10 @@ def create_ui():
     button4 = Button(root, text="RA Links Query", command=query_4, width=25, height=2, font=("Arial", 12), relief="solid", bg="#4CAF50", fg="white")
     button4.grid(row=2, column=1, padx=10, pady=10)
 
-    button5 = Button(root, text="Number of Unlinked Objectives", command=query_5, width=25, height=2, font=("Arial", 12), relief="solid", bg="#4CAF50", fg="white")
+    button5 = Button(root, text="Number of Unlinked Objectives", command=query_5, width=40, height=2, font=("Arial", 12), relief="solid", bg="#4CAF50", fg="white")
     button5.grid(row=3, column=0, columnspan=2, pady=10)
 
-    button6 = Button(root, text="Incoming and Outgoing Objective Links", command=query_6, width=25, height=2, font=("Arial", 12), relief="solid", bg="#4CAF50", fg="white")
+    button6 = Button(root, text="Incoming and Outgoing Objective Links", command=query_6, width=40, height=2, font=("Arial", 12), relief="solid", bg="#4CAF50", fg="white")
     button6.grid(row=4, column=0, columnspan=2, pady=10)
 
     # Entry field for user input (course name or ID)
@@ -269,14 +269,19 @@ def create_ui():
     scrollbar = Scrollbar(result_frame)
     scrollbar.grid(row=0, column=1, sticky='ns')  # Placing the scrollbar on the right side of the result frame
 
-    # Text widget inside the result frame
+    # Text widget inside the result frame with monospace font
     global result_text
-    result_text = Text(result_frame, wrap=WORD, height=15, width=90, font=("Arial", 10))
+    result_text = Text(result_frame, wrap=WORD, height=15, width=90, font=("Courier New", 10))
     result_text.grid(row=0, column=0, sticky='nsew')  # Make text widget expand
 
     # Configure scrollbar to work with the text widget
     scrollbar.config(command=result_text.yview)
     result_text.config(yscrollcommand=scrollbar.set)
+
+    # Center text inside the Text widget by setting alignment to center
+    result_text.tag_configure("center", justify='center')
+    result_text.insert(INSERT, "Your results will appear here...\n")
+    result_text.tag_add("center", "1.0", "end")  # Center all inserted text
 
     # Allow the result frame to expand and fill available space
     result_frame.grid_rowconfigure(0, weight=1)
