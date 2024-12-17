@@ -3,53 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Management</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            color: #333;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .btn {
-            display: inline-block;
-            margin: 10px 0;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .btn:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <title>Home Menu</title>
 </head>
 <body>
+    <h1>Predefined Queries Menu</h1>
+    <form action="{% url 'predefined_query' %}" method="get">
+        <label for="query_type">Choose a query:</label>
+        <select name="query_type" id="query_type" required>
+            <option value="all_courses">View All Courses</option>
+            <option value="objectives_for_course">View Objectives for a Specific Course</option>
+            <option value="ra_links_high_importance">View RA Links with High Importance</option>
+            <option value="requirements_for_course">View Requirements for a Specific Course</option>
+            <option value="objetivos_terminales">Objetivos Terminales</option>
+        </select>
 
-    <div class="container">
-        <h1>Welcome to the Course Management System!</h1>
-        
-        <p>This system allows you to manage and query courses, objectives, requirements, and RA links.</p>
+        <br><br>
 
-        <div>
-            <h3>What would you like to do?</h3>
-            <ul>
-                <li><a class="btn" href="{% url 'predefined_query' %}">View Predefined Query Results</a></li>
-                <!-- You can add more options here as needed -->
-            </ul>
-        </div>
-    </div>
+        <label for="user_input">Optional Input (e.g., Course ID or Name):</label>
+        <input type="text" id="user_input" name="user_input" placeholder="Enter Course ID or Name">
 
+        <br><br>
+
+        <button type="submit">Run Query</button>
+    </form>
 </body>
 </html>

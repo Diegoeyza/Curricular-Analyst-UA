@@ -4,53 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Query Results</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="my-4">Query Results</h1>
+    <h1>Query Results</h1>
+    <h3>{{ query_description }}</h3>
 
-        <!-- Courses Section -->
-        <div class="mb-4">
-            <h2>Courses</h2>
-            <ul class="list-group">
-                {% for course in courses %}
-                    <li class="list-group-item">
-                        <strong>{{ course.name }}</strong> (ID: {{ course.id }})
-                    </li>
-                {% empty %}
-                    <li class="list-group-item">No courses found.</li>
+    {% if results %}
+        <table border="1">
+            <thead>
+                <tr>
+                    {% if results.0|length > 0 %}
+                        <!-- Assuming results are a list of dictionaries -->
+                        {% for key, value in results.0.items %}
+                            <th>{{ key|capfirst }}</th>
+                        {% endfor %}
+                    {% else %}
+                        <!-- If results are tuples, assume first row has the column names -->
+                        <th>Result Data</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                        {% if result|length > 0 %}
+                            <!-- Handle case where each result is a dictionary -->
+                            {% for value in result.values %}
+                                <td>{{ value }}</td>
+                            {% endfor %}
+                        {% else %}
+                            <!-- If it's a tuple, just display values -->
+                            <td>{{ result }}</td>
+                        {% endif %}
+                    </tr>
                 {% endfor %}
-            </ul>
-        </div>
+            </tbody>
+        </table>
+    {% else %}
+        <p>No results found or invalid input.</p>
+    {% endif %}
 
-        <!-- Objectives Section -->
-        <div class="mb-4">
-            <h2>Objectives</h2>
-            <ul class="list-group">
-                {% for objective in objectives %}
-                    <li class="list-group-item">
-                        <strong>{{ objective.name }}</strong>: {{ objective.description }}
-                    </li>
-                {% empty %}
-                    <li class="list-group-item">No objectives found for this course.</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <!-- RA Links Section -->
-        <div class="mb-4">
-            <h2>RA Links</h2>
-            <ul class="list-group">
-                {% for ra_link in ra_links %}
-                    <li class="list-group-item">
-                        <strong>{{ ra_link.name }}</strong> - Importance: {{ ra_link.importancia }}
-                    </li>
-                {% empty %}
-                    <li class="list-group-item">No RA links found with high importance.</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
+    <br>
+    <a href="{% url 'index' %}">Back to Home</a>
 </body>
 </html>

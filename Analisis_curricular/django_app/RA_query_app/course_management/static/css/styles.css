@@ -1,0 +1,95 @@
+/* styles.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #121212;
+    color: #E0E0E0;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h3 {
+    text-align: center;
+    color: #BB86FC;
+}
+
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #1E1E1E;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+label {
+    font-size: 1.2em;
+    display: block;
+    margin-bottom: 8px;
+}
+
+select, input, button {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #BB86FC;
+    border-radius: 5px;
+    background-color: #333333;
+    color: #E0E0E0;
+}
+
+button {
+    cursor: pointer;
+    background-color: #BB86FC;
+    color: #121212;
+    font-size: 1.1em;
+}
+
+button:hover {
+    background-color: #3700B3;
+}
+
+a {
+    color: #BB86FC;
+    text-decoration: none;
+    font-size: 1.1em;
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+a:hover {
+    color: #3700B3;
+}
+
+table {
+    width: 80%;
+    margin: 30px auto;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #BB86FC;
+}
+
+th {
+    background-color: #3700B3;
+    color: #E0E0E0;
+}
+
+tr:nth-child(even) {
+    background-color: #333333;
+}
+
+tr:nth-child(odd) {
+    background-color: #1E1E1E;
+}
+
+td {
+    background-color: #212121;
+}
+
+p {
+    text-align: center;
+    color: #FF4081;
+}
