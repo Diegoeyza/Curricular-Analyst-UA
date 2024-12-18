@@ -80,7 +80,7 @@ function copyDataToRALinks() {
   }
   
   // Read data from 'Course Dropdown' starting from row 8, columns A to E
-  const dataRange = courseDropdownSheet.getRange('A9:E' + courseDropdownSheet.getLastRow());
+  const dataRange = courseDropdownSheet.getRange('A8:E' + courseDropdownSheet.getLastRow());
   const data = dataRange.getValues();
   
   // Filter out empty rows

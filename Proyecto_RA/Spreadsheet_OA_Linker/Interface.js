@@ -178,47 +178,68 @@ function updateLearningObjectivesDropdown(e) {
       sheet.getRange(5, 3).setValue(selectedImportancia); // Set the selected importancia in C5
   }
 
-  // Check if we are in the "Course Dropdown" sheet and the cell edited is A2
-  if (sheet.getName() === "Course Dropdown" && range.getA1Notation() === "A2") {
-      var selectedCourseID = sheet.getRange(5, 1).getValue(); // Get the Course ID from A5
 
-      // Get the active spreadsheet
-      var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-      
-      // Get the 'requirements' sheet
-      var requirementsSheet = spreadsheet.getSheetByName("requirements");
 
-      // Get the requirement data (ID, Requirement, etc.)
-      var requirementsRange = requirementsSheet.getRange(2, 1, requirementsSheet.getLastRow() - 1, 3); // Get ID (col 1), Requirement ID (col 2), Requirement (col 3)
-      var requirementsValues = requirementsRange.getValues();
-      
-      // Filter requirements based on the selected Course ID
-      var filteredRequirements = requirementsValues.filter(function(row) {
-          return row[0] == selectedCourseID; // Row[0] is the course ID in the 'requirements' sheet
-      }).map(function(row) {
-          return row[2]; // Get the requirement from column 3 (index 2)
-      });
-      //add the course itself to the requirements as if it was a requirement
-      filteredRequirements.unshift(sheet.getRange(2, 1).getValue());
 
-      // If there are requirements for the selected Course ID, add them to dropdown in D2
-      if (filteredRequirements.length > 0) {
-          var requirementRule = SpreadsheetApp.newDataValidation()
-                      .requireValueInList(filteredRequirements)
-                      .build();
-          sheet.getRange(2, 4).setDataValidation(requirementRule); // Set validation in D2
-      } else {
-          // If no requirements found, clear validation in D2
-          sheet.getRange(2, 4).clearDataValidations();
-      }
-    
-    // Set the first matching Requirement ID in D5
-    if (requirementIDs.length > 0) {
-      sheet.getRange(5, 4).setValue(requirementIDs[0]); // Set the first matching Requirement ID
-    } else {
-      sheet.getRange(5, 4).clearContent(); // Clear if no requirements are found
+
+
+
+
+    // Check if we are in the "Course Dropdown" sheet and the cell edited is A2
+    if (sheet.getName() === "Course Dropdown" && range.getA1Notation() === "A2") {
+        var selectedCourseID = sheet.getRange(5, 1).getValue(); // Get the Course ID from A5
+
+        // Get the active spreadsheet
+        var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+        
+        // Get the 'requirements' sheet
+        var requirementsSheet = spreadsheet.getSheetByName("requirements");
+
+        // Get the requirement data (ID, Requirement ID, etc.)
+        var requirementsRange = requirementsSheet.getRange(2, 1, requirementsSheet.getLastRow() - 1, 3); // Get ID (col 1), Requirement ID (col 2), Requirement (col 3)
+        var requirementsValues = requirementsRange.getValues();
+        
+        // Filter requirements based on the selected Course ID
+        var filteredRequirements = requirementsValues.filter(function(row) {
+            return row[0] == selectedCourseID; // Row[0] is the course ID in the 'requirements' sheet
+        });
+        
+        // Add the course itself to the requirements as if it was a requirement
+        var courseRequirement = [selectedCourseID, selectedCourseID, sheet.getRange(2, 1).getValue()]; // [ID, Requirement ID, Requirement Name]
+        filteredRequirements.unshift(courseRequirement);
+        
+        // Extract requirement names and IDs
+        var requirementNames = filteredRequirements.map(function(row) {
+            return row[2]; // Get the requirement from column 3 (index 2)
+        });
+        var requirementIDs = filteredRequirements.map(function(row) {
+            return row[1]; // Get the Requirement ID from column 2 (index 1)
+        });
+
+        // If there are requirements for the selected Course ID, add them to dropdown in D2
+        if (requirementNames.length > 0) {
+            var requirementRule = SpreadsheetApp.newDataValidation()
+                        .requireValueInList(requirementNames)
+                        .build();
+            sheet.getRange(2, 4).setDataValidation(requirementRule); // Set validation in D2
+        } else {
+            // If no requirements found, clear validation in D2
+            sheet.getRange(2, 4).clearDataValidations();
+        }
+
+        // Set the first matching Requirement ID in D5
+        if (requirementIDs.length > 0) {
+            sheet.getRange(5, 4).setValue(requirementIDs[0]); // Set the first matching Requirement ID
+        } else {
+            sheet.getRange(5, 4).clearContent(); // Clear if no requirements are found
+        }
     }
-  }
+
+
+
+
+
+
 
   // Check if we are in the "Course Dropdown" sheet and the cell edited is D2
   if (sheet.getName() === "Course Dropdown" && range.getA1Notation() === "D2") {
