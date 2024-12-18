@@ -26,78 +26,78 @@ Sub casiConcentraciones()
     On Error GoTo 0
 
     ' Create a new "Asignaciones" sheet
-    Set wsDatos = ThisWorkbook.Sheets("Datos") ' Cambia "Datos" por el nombre de tu hoja con la información
+    Set wsDatos = ThisWorkbook.Sheets("Datos") ' Change "Datos" to the name of your sheet with information
     Set wsAsignaciones = ThisWorkbook.Sheets.Add
     wsAsignaciones.Name = "Asignaciones"
     Debug.Print ("-----------------------------")
     
-    ' Pregunta por los cupos disponibles para cada concentración
+    ' Ask for available slots for each concentration
     concentraciones = Array("Diseño y Análisis de Algoritmos", "Movilidad Urbana", "Modelación Matemática Aplicada", _
                             "Análisis de Circuitos", "Diseño Hidráulico", "Desarrollo de Aplicaciones Web", "Ingeniería de Bioprocesos")
     
     Set cupos = CreateObject("Scripting.Dictionary")
     For i = LBound(concentraciones) To UBound(concentraciones)
         Dim numCupos As Integer
-        ' Get the number of slots from column 7 of "Restricciones" sheet instead of InputBox
+        ' Get the number of slots from column 8 of "Restricciones" sheet instead of InputBox
         Set wsRestricciones = ThisWorkbook.Sheets("Restricciones")
-        numCupos = wsRestricciones.Cells(i + 2, 8).Value ' Assuming the cupos are in column 7
+        numCupos = wsRestricciones.Cells(i + 2, 8).Value ' Assuming the slots are in column 8
         Debug.Print (wsRestricciones.Cells(i + 2, 8).Value)
-        cupos.Add LCase(Trim(concentraciones(i))), numCupos ' Convierte a minúsculas y elimina espacios
+        cupos.Add LCase(Trim(concentraciones(i))), numCupos ' Convert to lowercase and trim spaces
         Debug.Print (LCase(Trim(concentraciones(i))))
     Next i
-    Debug.Print ("End cupos")
+    Debug.Print ("End slots")
     
-    ' Configura las restricciones por concentración y especialidad
+    ' Set restrictions by concentration and specialty
     Set restricciones = CreateObject("Scripting.Dictionary")
     restricciones.Add "Diseño y Análisis de Algoritmos", Array("Ciencia de la Computación")
-    restricciones.Add "Movilidad Urbana", Array() ' Sin restricciones
+    restricciones.Add "Movilidad Urbana", Array() ' No restrictions
     restricciones.Add "Modelación Matemática Aplicada", Array("Industrial")
     restricciones.Add "Análisis de Circuitos", Array("Eléctrica")
     restricciones.Add "Diseño Hidráulico", Array("Obras Civiles", "Ambiental")
     restricciones.Add "Desarrollo de Aplicaciones Web", Array("Ciencia de la Computación")
     restricciones.Add "Ingeniería de Bioprocesos", Array("Ambiental")
     
-    ' Inicializa el diccionario para rastrear los RUT de alumnos ya asignados
+    ' Initialize the dictionary to track already assigned students
     Set asignados = CreateObject("Scripting.Dictionary")
     
-    ' Copiar encabezados a la hoja de asignaciones
-    wsAsignaciones.Range("A1:J1").Value = Array("Alumno", "Email", "RUT", "Especialidad", "Concentración", "Prioridad", "Estado", "Prioridad Académica")
+    ' Copy headers to the assignment sheet
+    wsAsignaciones.Range("A1:I1").Value = Array("Alumno", "Email", "RUT", "Especialidad", "Creación", "Concentración", "Estado", "Prioridad", "Prioridad Académica")
     
-    ' Obtener el último renglón con datos
+    ' Get the last row with data
     ultimoRenglon = wsDatos.Cells(wsDatos.Rows.Count, 1).End(xlUp).Row
     
     ' Variable to track where to add unassigned rows
     unassignedRow = ultimoRenglon + 1
     
-    ' Asignar concentraciones
+    ' Assign concentrations
     For i = 2 To ultimoRenglon
-        alumnoID = wsDatos.Cells(i, 3).Value ' Asume que la columna C es el RUT del alumno
-        especialidad = wsDatos.Cells(i, 4).Value ' Columna de Especialidad
+        alumnoID = wsDatos.Cells(i, 3).Value ' Assume column C is the student's RUT
+        especialidad = wsDatos.Cells(i, 4).Value ' Specialty column
         
-        ' Verificación de la prioridad
+        ' Check priority
         If IsNumeric(wsDatos.Cells(i, 7).Value) Then
             prioridad = wsDatos.Cells(i, 7).Value
         Else
-            prioridad = 0 ' Asigna un valor predeterminado si no es numérico
+            prioridad = 0 ' Assign a default value if not numeric
         End If
         
-        prioridadAcademica = wsDatos.Cells(i, 10).Value ' Columna de Prioridad Académica
+        prioridadAcademica = wsDatos.Cells(i, 10).Value ' Academic Priority column
         asignado = False
         
-        ' Verificar si el alumno ya tiene una asignación
+        ' Check if the student already has an assignment
         If Not asignados.exists(alumnoID) Then
-            ' Verificar restricciones y asignar la mejor opción disponible
-            For j = 1 To 3 ' Prioridades 1, 2, y 3
-                concentracion = LCase(Trim(wsDatos.Cells(i, 6).Value)) ' Lee la concentración desde la columna F (columna 6)
+            ' Check restrictions and assign the best available option
+            For j = 1 To 3 ' Priorities 1, 2, and 3
+                concentracion = LCase(Trim(wsDatos.Cells(i, 6).Value)) ' Read concentration from column F (column 6)
                 
-                ' Verificar si la especialidad del alumno tiene restricción para la concentración deseada
+                ' Check if the student's specialty is restricted for the desired concentration
                 If restricciones.exists(concentracion) Then
                     If IsInArray(especialidad, restricciones(concentracion)) Then
-                        GoTo SiguientePrioridad ' Saltar a la siguiente prioridad si la concentración está restringida
+                        GoTo NextPriority ' Skip to the next priority if the concentration is restricted
                     End If
                 End If
                 
-                ' Verificar si la concentración tiene cupos asignados y si hay cupos disponibles
+                ' Check if the concentration has assigned slots and if there are available slots
                 If cupos.exists(concentracion) Then
                     If cupos(concentracion) > 0 Then
                         wsAsignaciones.Cells(i, 1).Resize(1, 9).Value = wsDatos.Cells(i, 1).Resize(1, 9).Value
@@ -110,13 +110,13 @@ Sub casiConcentraciones()
                         cupos(concentracion) = cupos(concentracion) - 1
                         Debug.Print (cupos(concentracion))
                         asignado = True
-                        asignados.Add alumnoID, True ' Marca al alumno como asignado
+                        asignados.Add alumnoID, True ' Mark the student as assigned
                         Exit For
                     End If
                 Else
-                    MsgBox "Error: La concentración " & concentracion & " no tiene cupos asignados.", vbExclamation
+                    MsgBox "Error: The concentration " & concentracion & " does not have assigned slots.", vbExclamation
                 End If
-SiguientePrioridad:
+NextPriority:
             Next j
         End If
         
@@ -132,10 +132,10 @@ SiguientePrioridad:
     ' Call the function to remove duplicates
     RemoveDuplicates wsAsignaciones
 
-    MsgBox "Asignación completada.", vbInformation
+    MsgBox "Assignment completed.", vbInformation
 End Sub
 
-' Función auxiliar para verificar si un elemento está en un arreglo
+' Auxiliary function to check if an element is in an array
 Function IsInArray(valueToFind As Variant, arr As Variant) As Boolean
     Dim element As Variant
     On Error Resume Next
@@ -155,14 +155,14 @@ Sub RemoveDuplicates(ws As Worksheet)
     Dim rowsToDelete As Range
     Set alumnoDict = CreateObject("Scripting.Dictionary")
 
-    lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row ' Última fila con datos
+    lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row ' Last row with data
 
-    ' Iterar desde la primera fila hacia la última
+    ' Iterate from the first row to the last
     For i = 2 To lastRow ' Start from 2 to skip the header row
         Dim alumno As String
-        alumno = ws.Cells(i, 1).Value ' Columna A (Alumno)
+        alumno = ws.Cells(i, 1).Value ' Column A (Student)
 
-        ' Verificar si la fila está vacía o si el alumno ya existe
+        ' Check if the row is empty or if the student already exists
         If alumno = "" Or alumnoDict.exists(alumno) Then
             If rowsToDelete Is Nothing Then
                 Set rowsToDelete = ws.Rows(i)
@@ -170,11 +170,11 @@ Sub RemoveDuplicates(ws As Worksheet)
                 Set rowsToDelete = Union(rowsToDelete, ws.Rows(i))
             End If
         Else
-            alumnoDict.Add alumno, Nothing ' Agregar el alumno al diccionario
+            alumnoDict.Add alumno, Nothing ' Add the student to the dictionary
         End If
     Next i
 
-    ' Eliminar filas marcadas
+    ' Delete marked rows
     If Not rowsToDelete Is Nothing Then
         rowsToDelete.Delete
     End If
