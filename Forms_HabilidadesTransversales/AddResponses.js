@@ -1,7 +1,7 @@
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('Actions')
-    .addItem('Update Data from Responses', 'updateDataFromResponses')
+    .addItem('Update HT sheet from Responses', 'updateDataFromResponses')
     .addItem('Create HT Sheet','extractAndInsertData')
     .addItem('Send Mails', 'sendEmailsFromHT')
     .addToUi();
@@ -10,12 +10,12 @@ function onOpen() {
 function updateDataFromResponses() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const responsesSheet = ss.getSheetByName('Responses');
-  const firstSheet = ss.getSheets()[0]; // Get the first sheet
+  const firstSheet = ss.getSheetByName('HT'); // Get the HT sheet (modify this if your destination sheet has some other name)
   
   const responsesData = responsesSheet.getDataRange().getValues(); // Get all data from the Responses sheet
   const firstSheetData = firstSheet.getDataRange().getValues(); // Get all data from the first sheet
   
-  // Find the indexes of the columns in the first sheet
+  // Find the indexes of the columns in the HT sheet
   const firstSheetHeaders = firstSheetData[0];
   const llaveIndexFirstSheet = firstSheetHeaders.indexOf('LLAVE');
   const instrumentoIndexFirstSheet = firstSheetHeaders.indexOf('Instrumento');

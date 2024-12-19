@@ -133,6 +133,38 @@
       .choices input[type="radio"] {
         margin-right: 10px;
       }
+
+      
+      .month-selector {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 4 months per row */
+        gap: 10px;
+        justify-items: center;
+        margin-bottom: 20px;
+      }
+
+      .month-button {
+        padding: 12px 18px;
+        background-color: black;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+        box-sizing: border-box;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .month-button:hover {
+        background-color: #007bff;
+        color: white;
+      }
+
+      .month-button.selected {
+        background-color: #007bff;
+        color: white;
+      }
+
     </style>
   </head>
   <body>
@@ -170,7 +202,7 @@
           </li>
           <li>
             <label>
-              <input type="radio" name="instrument" value="Prueba"> Prueba
+              <input type="radio" name="instrument" value="Presentación"> Presentación
             </label>
           </li>
           <li>
@@ -218,7 +250,21 @@
 
 
         <p>¿En qué mes/meses será medida la habilidad transversal?:</p>
-        <textarea id="comments" placeholder="Ejemplo: Marzo, Abril, Junio"></textarea>
+        <div id="monthsContainer" class="month-selector">
+          <button class="month-button" onclick="toggleMonth('Enero')">Enero</button>
+          <button class="month-button" onclick="toggleMonth('Febrero')">Febrero</button>
+          <button class="month-button" onclick="toggleMonth('Marzo')">Marzo</button>
+          <button class="month-button" onclick="toggleMonth('Abril')">Abril</button>
+          <button class="month-button" onclick="toggleMonth('Mayo')">Mayo</button>
+          <button class="month-button" onclick="toggleMonth('Junio')">Junio</button>
+          <button class="month-button" onclick="toggleMonth('Julio')">Julio</button>
+          <button class="month-button" onclick="toggleMonth('Agosto')">Agosto</button>
+          <button class="month-button" onclick="toggleMonth('Septiembre')">Septiembre</button>
+          <button class="month-button" onclick="toggleMonth('Octubre')">Octubre</button>
+          <button class="month-button" onclick="toggleMonth('Noviembre')">Noviembre</button>
+          <button class="month-button" onclick="toggleMonth('Diciembre')">Diciembre</button>
+        </div>
+        <textarea id="comments" placeholder="Ejemplo: Marzo, Abril, Junio" style="display:none;"></textarea>
 
         <button onclick="saveResponses()">Guardar</button>
       </div>
@@ -237,6 +283,25 @@
     </div>
 
     <script>
+      let selectedMonths = [];
+
+      function toggleMonth(month) {
+        const monthButton = document.querySelector(`button[onclick="toggleMonth('${month}')"]`);
+        const index = selectedMonths.indexOf(month);
+
+        if (index === -1) {
+          selectedMonths.push(month);  // Add month if not selected
+          monthButton.classList.add('selected');
+        } else {
+          selectedMonths.splice(index, 1);  // Remove month if already selected
+          monthButton.classList.remove('selected');
+        }
+
+        // Optionally, you can store the selected months as a comma-separated string
+        document.getElementById('comments').value = selectedMonths.join(', ');
+      }
+
+
       let courseData = [];
 
       function getRecommendations(input) {

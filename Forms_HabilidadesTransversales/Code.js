@@ -3,7 +3,7 @@ function doGet() {
 }
 
 function getRecommendations(input) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('HT'); //modify this if your HT sheet has some other name
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
   const llaveIndex = headers.indexOf('LLAVE'); // Get the column index for LLAVE
@@ -15,7 +15,7 @@ function getRecommendations(input) {
 }
 
 function getCourseData(courseName) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('HT'); //modify this if your HT sheet has some other name
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
 
