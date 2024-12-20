@@ -17,19 +17,19 @@ Sub CheckCourseIntersections()
     Dim i As Integer
 
     ' Initialize constants
-    dayHeaders = Array("LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES")
+    dayHeaders = Array("LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES") ‘days of the week headers in the excel with the course data
     
     ' Set workbook and worksheet for the first Excel
     Set wb1 = ThisWorkbook
-    Set ws1 = wb1.Sheets("Sheet1")
-    Set rng1 = ws1.Range("A2:A" & ws1.Cells(ws1.Rows.Count, "A").End(xlUp).Row) ' Range excluding header
+    Set ws1 = wb1.Sheets(1)
+    Set rng1 = ws1.Range("A2:A" & ws1.Cells(ws1.Rows.Count, "A").End(xlUp).Row) ' Range excluding header (the header starts at A1)
     
     ' Find column indices dynamically in the first workbook
     Dim colNRC1 As Integer, colNRC2 As Integer, colTope As Integer
-    colNRC1 = FindColumn(ws1, "NRC1")
-    colNRC2 = FindColumn(ws1, "NRC2")
-    colTope = FindColumn(ws1, "tope")
-    
+    colNRC1 = FindColumn(ws1, "NRC")    ' Change this if the column containing the NRC changes the header name
+    colNRC2 = FindColumn(ws1, "TOPE DE HORARIO CURSO 2")    ' Change this if the column containing the NRC of the second course changes header name
+    colTope = FindColumn(ws1, "TOPES") ' This is the output column where it will add the data like CLAS-CLAS, this column must exist
+    colCantidadTopes = FindColumn(ws1, "CANTIDAD TOPES") ' This is the output column where there will be the ammount of intersections    
     ' Open the second Excel
     filePath = Application.GetOpenFilename("Excel Files (*.xls; *.xlsx), *.xls; *.xlsx", , "Select the Second Workbook")
     If filePath = "False" Then Exit Sub ' Exit if no file is selected
@@ -38,138 +38,99 @@ Sub CheckCourseIntersections()
     Set filterRange = ws2.Rows(14) ' Assume headers are in row 14
 
     ' Find column indices dynamically in the second workbook
-    colNRC = FindColumn(ws2, "NRC", 14)
-    colTipo = FindColumn(ws2, "TIPO DE REUNIÓN", 14)
-    colDia = FindColumn(ws2, "INICIO", 14)
+    colNRC = FindColumn(ws2, "NRC", 14) ‘The column that contains the NRC in the horario excel
+    colTipo = FindColumn(ws2, "TIPO DE REUNIÓN", 14) ‘The columna with the type of the course (CLAS, AYUD, LABT, etc
+    colDia = FindColumn(ws2, "INICIO", 14) ‘start date for the row, like the day a test happens or classes start
     
-    
-    
-    
+    Dim verification As Integer
     ' Loop through NRC pairs in the first workbook
-For Each cell1 In rng1
-    nrc1 = ws1.Cells(cell1.Row, colNRC1).Value
-    nrc2 = ws1.Cells(cell1.Row, colNRC2).Value
-
-    Debug.Print "Processing NRC pair: " & nrc1 & " and " & nrc2
-
-
-
+    For Each cell1 In rng1
+        ws2.Rows.Hidden = False ' Unhide all rows
+        nrc1 = ws1.Cells(cell1.Row, colNRC1).Value
+        nrc2 = ws1.Cells(cell1.Row, colNRC2).Value
+        If nrc1 <> "" And nrc2 <> "" Then
+        
             ' Get the filtered rows from the second workbook
-        Set filteredNRC = RegularFilterNRC(ws2, nrc1, nrc2, colNRC, filterRange)
-        
-        ' Debug: Show filtered NRCs
-        Debug.Print "Filtered NRCs: " & Join(filteredNRC.Keys, ", ")
-        
-
-        ' Check time and date intersections
-        Set intersectionList = New Collection
-        
-        Dim verification As Integer
-        verification = 0
-' Loop through the filtered NRC keys (nrcKey) in the first workbook
-For Each nrcKey1 In filteredNRC.Keys
-    ' Loop through the filtered NRC keys (nrcKey) again for pairwise comparison
-    For Each nrcKey2 In filteredNRC.Keys
-        If nrcKey1 <> nrcKey2 And verification = 0 Then ' Ensure we're comparing different NRCs
-            Debug.Print "Comparing NRCs: " & nrcKey1 & " and " & nrcKey2
-            verification = 1
-
-            ' Check if NRCs exist in filteredNRC and proceed with comparisons
-                Debug.Print "Passed the if"
-                Set intersectionList = New Collection
-
-                ' Loop through all rows for the first NRC (nrcKey1)
-                For Each row1 In filteredNRC(nrcKey1)
-                    ' Loop through all rows for the second NRC (nrcKey2)
-                    For Each row2 In filteredNRC(nrcKey2)
-                        Debug.Print "Comparing rows: " & row1 & " and " & row2
-
-                        For i = LBound(dayHeaders) To UBound(dayHeaders)
-                            Dim dayCol As Integer
-                            dayCol = FindColumn(ws2, CStr(dayHeaders(i)), 14)
-
-                            ' Ensure we are accessing the correct cell
-                            timeRange1 = ws2.Cells(row1, dayCol).Value
-                            timeRange2 = ws2.Cells(row2, dayCol).Value
-
-                            Debug.Print "Day: " & dayHeaders(i) & ", Row1 Time: " & timeRange1 & ", Row2 Time: " & timeRange2
-
-                            If timeRange1 <> "" And timeRange2 <> "" Then
-                                ParseTimeRange timeRange1, start1, end1
-                                ParseTimeRange timeRange2, start2, end2
-
-                                Debug.Print "Parsed Times - Row1: " & start1 & " to " & end1 & ", Row2: " & start2 & " to " & end2
-
-                                ' Check for time overlap
-                                If (start1 < end2) And (end1 > start2) Then
-                                    tipo1 = ws2.Cells(row1, colTipo).Value
-                                    tipo2 = ws2.Cells(row2, colTipo).Value
-
-                                    Debug.Print "Overlap Found - Tipo1: " & tipo1 & ", Tipo2: " & tipo2
-
-                                    ' Handle special case for TIPO not being CLAS, AYUD, or LABT
-                                    If Not (tipo1 = "CLAS" Or tipo1 = "AYUD" Or tipo1 = "LABT") Or Not (tipo2 = "CLAS" Or tipo2 = "AYUD" Or tipo2 = "LABT") Then
-                                        dia1 = ws2.Cells(row1, colDia).Value
-                                        dia2 = ws2.Cells(row2, colDia).Value
-                                        If dia1 = dia2 Then
-                                            Debug.Print "Days Match - Dia1: " & dia1 & ", Dia2: " & dia2
-                                            intersectionList.Add tipo1 & "-" & tipo2
+            Set filteredNRC = RegularFilterNRC(ws2, nrc1, nrc2, colNRC, filterRange)
+            
+            ' Check time and date intersections
+            Set intersectionList = New Collection
+            
+            verification = 0
+            For Each nrcKey1 In filteredNRC.Keys
+                For Each nrcKey2 In filteredNRC.Keys
+                    If nrcKey1 <> nrcKey2 And verification = 0 Then
+                        verification = 1
+            
+                        Set intersectionList = New Collection
+                        For Each row1 In filteredNRC(nrcKey1)
+                            For Each row2 In filteredNRC(nrcKey2)
+                                For i = LBound(dayHeaders) To UBound(dayHeaders)
+                                    Dim dayCol As Integer
+                                    dayCol = FindColumn(ws2, CStr(dayHeaders(i)), 14)
+            
+                                    timeRange1 = ws2.Cells(row1, dayCol).Value
+                                    timeRange2 = ws2.Cells(row2, dayCol).Value
+            
+                                    If timeRange1 <> "" And timeRange2 <> "" Then
+                                        ParseTimeRange timeRange1, start1, end1
+                                        ParseTimeRange timeRange2, start2, end2
+            
+                                        If (start1 < end2) And (end1 > start2) Then
+                                            tipo1 = ws2.Cells(row1, colTipo).Value
+                                            tipo2 = ws2.Cells(row2, colTipo).Value
+            
+                                            If Not (tipo1 = "CLAS" Or tipo1 = "AYUD" Or tipo1 = "LABT") Or Not (tipo2 = "CLAS" Or tipo2 = "AYUD" Or tipo2 = "LABT") Then ‘here goes all of the evaluation that are not in a specific day, but on a semester basis
+                                                dia1 = ws2.Cells(row1, colDia).Value
+                                                dia2 = ws2.Cells(row2, colDia).Value
+                                                If dia1 = dia2 Then
+                                                    intersectionList.Add tipo1 & "-" & tipo2
+                                                End If
+                                            Else
+                                                intersectionList.Add tipo1 & "-" & tipo2
+                                            End If
                                         End If
-                                    Else
-                                        intersectionList.Add tipo1 & "-" & tipo2
                                     End If
-                                End If
-                            End If
-                        Next i
-                    Next row2
-                Next row1
-
-                ' Convert intersection list to string
-                If intersectionList.Count > 0 Then
-                    result = ""
-                    For Each Item In intersectionList
-                        result = result & Item & ", "
-                    Next Item
-                    result = Left(result, Len(result) - 2) ' Remove trailing comma and space
-                Else
-                    result = "No intersection"
-                End If
-
-                Debug.Print "Intersection Result for NRC pair (" & nrcKey1 & ", " & nrcKey2 & "): " & result
-
-                ' Write result to "tope" column in the first workbook
-                ws1.Cells(cell1.Row, colTope).Value = result
+                                Next i
+                            Next row2
+                        Next row1
+            
+                        If intersectionList.Count > 0 Then
+                            result = ""
+                            For Each Item In intersectionList
+                                result = result & Item & ", "
+                            Next Item
+                            result = Left(result, Len(result) - 2)
+                        Else
+                            result = "No intersection"
+                        End If
+            
+                        ws1.Cells(cell1.Row, colTope).Value = result
+                    End If
+                Next nrcKey2
+            Next nrcKey1
+        
+            If intersectionList.Count > 0 Then
+                result = ""
+                For Each Item In intersectionList
+                    result = result & Item & ", "
+                Next Item
+                result = Left(result, Len(result) - 2)
+            Else
+                result = "No intersection"
+            End If
+            
+            ws1.Cells(cell1.Row, colTope).Value = result
+            ws1.Cells(cell1.Row, colCantidadTopes).Value = intersectionList.Count
         End If
-    Next nrcKey2
-Next nrcKey1
-        
-        ' Convert intersection list to string
-        If intersectionList.Count > 0 Then
-            result = ""
-            For Each Item In intersectionList
-                result = result & Item & ", "
-            Next Item
-            result = Left(result, Len(result) - 2) ' Remove trailing comma and space
-        Else
-            result = "No intersection"
-        End If
-        
-        Debug.Print "Intersection Result for NRC pair (" & nrc1 & ", " & nrc2 & "): " & result
-        
-        ' Write result to "tope" column in the first workbook
-        ws1.Cells(cell1.Row, colTope).Value = result
     Next cell1
 
-
-
-
-    ' Cleanup
-    ' Cleanup: Reset the rows visibility and remove any filtering
     ws2.AutoFilterMode = False
     ws2.Rows.Hidden = False ' Unhide all rows
     wb2.Close SaveChanges:=False
     MsgBox "Processing completed!", vbInformation
 End Sub
+
 
 
 Function FindColumn(ws As Worksheet, header As String, Optional headerRow As Long = 1) As Integer
@@ -213,7 +174,7 @@ Function RegularFilterNRC(ws2 As Worksheet, nrc1 As String, nrc2 As String, colN
             ws2.Rows(i).Hidden = True
         Else
             ' Make sure the row is visible if it matches either nrc1 or nrc2
-            Debug.Print "Row num=" & i
+            ' Debug.Print "Row num=" & i
             
             ' If the NRC key doesn't exist in the dictionary, add it with an empty collection
             If Not filteredRows.Exists(ws2.Cells(i, colNRC).Value) Then
@@ -229,4 +190,3 @@ Function RegularFilterNRC(ws2 As Worksheet, nrc1 As String, nrc2 As String, colN
     ' Return the dictionary of filtered rows
     Set RegularFilterNRC = filteredRows
 End Function
-
