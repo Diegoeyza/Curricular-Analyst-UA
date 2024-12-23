@@ -17,7 +17,7 @@ Sub CheckCourseIntersections()
     Dim i As Integer
 
     ' Initialize constants
-    dayHeaders = Array("LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES") ‘days of the week headers in the excel with the course data
+    dayHeaders = Array("LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES") ' days of the week headers in the excel with the course data
     
     ' Set workbook and worksheet for the first Excel
     Set wb1 = ThisWorkbook
@@ -29,7 +29,7 @@ Sub CheckCourseIntersections()
     colNRC1 = FindColumn(ws1, "NRC")    ' Change this if the column containing the NRC changes the header name
     colNRC2 = FindColumn(ws1, "TOPE DE HORARIO CURSO 2")    ' Change this if the column containing the NRC of the second course changes header name
     colTope = FindColumn(ws1, "TOPES") ' This is the output column where it will add the data like CLAS-CLAS, this column must exist
-    colCantidadTopes = FindColumn(ws1, "CANTIDAD TOPES") ' This is the output column where there will be the ammount of intersections    
+    colCantidadTopes = FindColumn(ws1, "CANTIDAD TOPES") ' This is the output column where there will be the ammount of intersections
     ' Open the second Excel
     filePath = Application.GetOpenFilename("Excel Files (*.xls; *.xlsx), *.xls; *.xlsx", , "Select the Second Workbook")
     If filePath = "False" Then Exit Sub ' Exit if no file is selected
@@ -38,9 +38,9 @@ Sub CheckCourseIntersections()
     Set filterRange = ws2.Rows(14) ' Assume headers are in row 14
 
     ' Find column indices dynamically in the second workbook
-    colNRC = FindColumn(ws2, "NRC", 14) ‘The column that contains the NRC in the horario excel
-    colTipo = FindColumn(ws2, "TIPO DE REUNIÓN", 14) ‘The columna with the type of the course (CLAS, AYUD, LABT, etc
-    colDia = FindColumn(ws2, "INICIO", 14) ‘start date for the row, like the day a test happens or classes start
+    colNRC = FindColumn(ws2, "NRC", 14) ' The column that contains the NRC in the horario excel
+    colTipo = FindColumn(ws2, "TIPO DE REUNIÓN", 14) ' The columna with the type of the course (CLAS, AYUD, LABT, etc
+    colDia = FindColumn(ws2, "INICIO", 14) ' start date for the row, like the day a test happens or classes start
     
     Dim verification As Integer
     ' Loop through NRC pairs in the first workbook
@@ -80,7 +80,7 @@ Sub CheckCourseIntersections()
                                             tipo1 = ws2.Cells(row1, colTipo).Value
                                             tipo2 = ws2.Cells(row2, colTipo).Value
             
-                                            If Not (tipo1 = "CLAS" Or tipo1 = "AYUD" Or tipo1 = "LABT") Or Not (tipo2 = "CLAS" Or tipo2 = "AYUD" Or tipo2 = "LABT") Then ‘here goes all of the evaluation that are not in a specific day, but on a semester basis
+                                            If Not (tipo1 = "CLAS" Or tipo1 = "AYUD" Or tipo1 = "LABT") Or Not (tipo2 = "CLAS" Or tipo2 = "AYUD" Or tipo2 = "LABT") Then ' here goes all of the evaluation that are not in a specific day, but on a semester basis
                                                 dia1 = ws2.Cells(row1, colDia).Value
                                                 dia2 = ws2.Cells(row2, colDia).Value
                                                 If dia1 = dia2 Then
@@ -190,3 +190,4 @@ Function RegularFilterNRC(ws2 As Worksheet, nrc1 As String, nrc2 As String, colN
     ' Return the dictionary of filtered rows
     Set RegularFilterNRC = filteredRows
 End Function
+
