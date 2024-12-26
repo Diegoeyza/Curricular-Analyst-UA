@@ -7,3 +7,4 @@ venv
 !form.html
 *.env
 !Proyecto_RA/django_app/RA_query_app/course_management/templates/course_management/*.html
+!Manejo_Solicitudes/*.pdf

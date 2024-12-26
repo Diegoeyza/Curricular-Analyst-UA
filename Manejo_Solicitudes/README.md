@@ -48,6 +48,8 @@ This VBA macro compares course schedules between two Excel workbooks to identify
    - The macro assumes time ranges are formatted as `HH:MM-HH:MM`. Modify `ParseTimeRange` if the format differs.
 3. **Output Columns**:
    - Ensure the "TOPES" and "CANTIDAD TOPES" columns exist in Workbook 1 before running the macro.
+4. **Number of Rows**:
+   - The number of rows to be analized is determined by the last cell in column 1, so if the last cell of column 1 is in row 200, the code will analize 200 rows
 
 ## Output
 - **Intersection Details**:
@@ -58,3 +60,6 @@ This VBA macro compares course schedules between two Excel workbooks to identify
 ## Error Handling
 - If a required header is not found, the macro will display an error message.
 - If the time range format is invalid, the macro will raise an error with the problematic range.
+
+## Step by Step Video
+[Step by Step Video in Spanish](https://youtu.be/FVZL9_V2nLw)
