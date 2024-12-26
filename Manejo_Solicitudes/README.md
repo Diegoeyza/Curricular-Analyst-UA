@@ -62,4 +62,4 @@ This VBA macro compares course schedules between two Excel workbooks to identify
 - If the time range format is invalid, the macro will raise an error with the problematic range.
 
 ## Step by Step Video
-[Step by Step Video in Spanish](https://youtu.be/FVZL9_V2nLw)
+[Step by Step Video in Spanish](https://youtu.be/u6iDi8V_zsM)
