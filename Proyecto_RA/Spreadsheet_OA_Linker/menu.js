@@ -68,7 +68,7 @@ function copyDataToRALinks() {
   if (!raLinksSheet) {
     raLinksSheet = ss.insertSheet('RA_Links');
     // Set the header row in 'RA_Links'
-    const headers = ['ID Curso', 'ID Objetivo', 'Importancia', 'ID Prerrequisito', 'ID Objetivo Prerrequisito'];
+    const headers = ['ID', 'ID_Objetivo', 'Importancia', 'ID_Prerrequisito', 'ID_Objetivo_Prerrequisito'];
     raLinksSheet.getRange('A1:E1').setValues([headers]);
   }
   

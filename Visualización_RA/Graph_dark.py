@@ -4,7 +4,7 @@ import networkx as nx
 from pyvis.network import Network
 
 # Load the Excel file
-file_path = r"C:\Users\diego\OneDrive\Documentos\Pythonhw\.vs\Curricular_analyst_UA\postgres_export.xlsx"
+file_path = r"C:\Users\diego\Github\Curricular-Analyst-UA\RA UandesFunctional (2).xlsx"
 # Load and normalize column headers to lowercase for all DataFrames
 general_df = pd.read_excel(file_path, sheet_name="general")
 general_df.columns = [col.lower() for col in general_df.columns]
