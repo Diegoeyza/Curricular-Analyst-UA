@@ -1,5 +1,5 @@
 function doGet() {
-  return HtmlService.createHtmlOutputFromFile('form');
+  return HtmlService.createHtmlOutputFromFile('forms');
 }
 
 function getRecommendations(input) {

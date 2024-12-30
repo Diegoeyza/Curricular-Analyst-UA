@@ -1,7 +1,7 @@
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('Actions')
-    .addItem('Update HT sheet from Responses', 'updateDataFromResponses')
+    .addItem('Update Data from Responses', 'updateDataFromResponses')
     .addItem('Create HT Sheet','extractAndInsertData')
     .addItem('Send Mails', 'sendEmailsFromHT')
     .addToUi();
