@@ -55,12 +55,15 @@ Sub Transfer()
                 If Not matchRow Is Nothing Then
                     ' Copy the data from wsX to wsFirst (matching row and column)
                     wsFirst.Cells(matchRow.Row, matchingCol).Value = wsX.Cells(idCell.Row, colX).Value
+                Else
+                    ' Highlight the row in wsX if the ID is not found in wsFirst
+                    wsX.Rows(idCell.Row).Interior.Color = RGB(255, 0, 0) ' Red highlight
                 End If
             Next idCell
         End If
     Next colX
 
-    MsgBox "Data moved for matching IDs and headers.", vbInformation
+    MsgBox "Data moved for matching IDs and headers. Rows with unmatched IDs have been highlighted in red.", vbInformation
 End Sub
 
 ' Function to check if a header exists in the collection

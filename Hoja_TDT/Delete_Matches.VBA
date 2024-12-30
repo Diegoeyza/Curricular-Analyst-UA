@@ -6,8 +6,6 @@ Sub Delete()
     Dim colFirst As Long, colX As Long
     Dim header As Variant
     Dim matchingCol As Long
-    Dim lastRowFirst As Long, lastRowX As Long
-    Dim lastDataRowX As Long
 
     ' Set the first sheet and sheet X
     Set wsFirst = ThisWorkbook.Sheets(1)
@@ -44,20 +42,7 @@ Sub Delete()
                 End If
             Next colFirst
 
-            ' Get the last row in sheet X
-            lastRowX = wsX.Cells(wsX.Rows.Count, colX).End(xlUp).Row
-
-            ' Find the last row with actual data (non-empty cells) in the column
-            lastDataRowX = wsX.Cells(wsX.Rows.Count, colX).End(xlUp).Row
-
-            ' Only proceed if there is data in the column (excluding the header row)
-            If WorksheetFunction.CountA(wsX.Range(wsX.Cells(2, colX), wsX.Cells(lastDataRowX, colX))) > 0 Then
-                ' Get the last row in the first sheet to clear data in the corresponding column
-                lastRowFirst = wsFirst.Cells(wsFirst.Rows.Count, matchingCol).End(xlUp).Row
-
-                ' Clear data in the matching column in the first sheet (excluding the header row)
-                wsFirst.Range(wsFirst.Cells(2, matchingCol), wsFirst.Cells(lastRowFirst, matchingCol)).ClearContents
-            End If
+            wsFirst.Range(wsFirst.Cells(2, matchingCol), wsFirst.Cells(300, matchingCol)).ClearContents
         End If
     Next colX
 
