@@ -1,4 +1,4 @@
-Sub DeleteMatchingColumnsData()
+Sub Delete()
     Dim wsFirst As Worksheet
     Dim wsX As Worksheet
     Dim firstHeaders As Collection
@@ -37,7 +37,7 @@ Sub DeleteMatchingColumnsData()
         If IsInCollection(firstHeaders, header) Then
             ' Get the matching column in the first sheet
             matchingCol = wsFirst.Cells(1, wsFirst.Columns.Count).End(xlToLeft).Column
-            For colFirst = 1 To matchingCol
+            For colFirst = 2 To matchingCol
                 If wsFirst.Cells(1, colFirst).Value = header Then
                     matchingCol = colFirst
                     Exit For
@@ -49,6 +49,8 @@ Sub DeleteMatchingColumnsData()
 
             ' Find the last row with actual data (non-empty cells) in the column
             lastDataRowX = wsX.Cells(wsX.Rows.Count, colX).End(xlUp).Row
+
+            ' Only proceed if there is data in the column (excluding the header row)
             If WorksheetFunction.CountA(wsX.Range(wsX.Cells(2, colX), wsX.Cells(lastDataRowX, colX))) > 0 Then
                 ' Get the last row in the first sheet to clear data in the corresponding column
                 lastRowFirst = wsFirst.Cells(wsFirst.Rows.Count, matchingCol).End(xlUp).Row
