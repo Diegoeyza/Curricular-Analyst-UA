@@ -114,6 +114,7 @@ function extractAndInsertData() {
   const implementacionIndex = diccionarioHeaders.indexOf("Implementación");
   const evaluacionIndex = diccionarioHeaders.indexOf("Evaluación de la HT");
   const correoIndex = diccionarioHeaders.indexOf("Correo");
+  const quienEvaluaIndex = diccionarioHeaders.indexOf("¿Quién evalúa?");
 
   // Iterate over the 'Habilidades Transversales' and update matching rows
   for (let i = 0; i < habilidadesValues.length; i++) {
@@ -124,6 +125,7 @@ function extractAndInsertData() {
     let implementacionFinal = "";
     let evaluacionFinal = "";
     let correoFinal= "";
+    let quienEvaluaFinal="";
 
     for (let habilidad of habilidadesList) {
       let diccionarioRow = diccionarioData.find(row => row[siglaIndex] === habilidad); // Find the matching row
@@ -149,6 +151,7 @@ function extractAndInsertData() {
       const implementacion = diccionarioRow[implementacionIndex] || "";
       const evaluacion = diccionarioRow[evaluacionIndex] || "";
       const correo = diccionarioRow[correoIndex] || "";
+      const quienEvalua = diccionarioRow[quienEvaluaIndex] || "";
 
       // Concatenate the values with "y" for multiple matches
       if (significado) {
@@ -175,6 +178,13 @@ function extractAndInsertData() {
       if (correo) {
         correoFinal = correo;
       }
+      if (quienEvalua) {
+        if (quienEvaluaFinal) {
+          quienEvaluaFinal += " y " + quienEvalua;
+        } else {
+          quienEvaluaFinal = quienEvalua;
+        }
+      }
     }
 
     // Insert the concatenated results into the HT sheet
@@ -182,12 +192,14 @@ function extractAndInsertData() {
     const implementacionCell = targetSheet.getRange(i + 2, requiredColumns.indexOf("Implementación") + 1);
     const evaluacionCell = targetSheet.getRange(i + 2, requiredColumns.indexOf("Evaluación de la HT") + 1);
     const correoCell = targetSheet.getRange(i + 2, requiredColumns.indexOf("INFO CORREO") + 1);
+    const quienEvaluaCell = targetSheet.getRange(i+2, requiredColumns.indexOf("¿Quién evalúa?")+1);
     if (habilidadesList.length>1 && !diccionarioData.map(row => row[0]).includes(habilidadesStripped)){
       diccionarioRow = [];
       diccionarioRow[siglaIndex] = habilidadesStripped; // Set the Sigla value
       diccionarioRow[significadoIndex] = significadoFinal; // Set default or placeholder values
       diccionarioRow[implementacionIndex] = implementacionFinal;
       diccionarioRow[evaluacionIndex] = evaluacionFinal;
+      diccionarioRow[quienEvaluaIndex] = quienEvaluaFinal;
 
       // Add the new row to the Diccionario sheet
       diccionarioSheet.appendRow(diccionarioRow);
@@ -197,6 +209,7 @@ function extractAndInsertData() {
     significadoCell.setValue(significadoFinal);
     implementacionCell.setValue(implementacionFinal);
     evaluacionCell.setValue(evaluacionFinal);
+    quienEvaluaCell.setValue(quienEvaluaFinal);
 
     // Handle the INFO CORREO column
     if (correoFinal.trim()) {
