@@ -248,7 +248,7 @@ def query_7():
 def query_8():
     course_input = course_input_var.get().strip()  # Get the input from the text box
     base_query = """
-    SELECT 
+    SELECT DISTINCT
         c.nombre AS course_name,
         c.id AS course_id,
         o.id_objetivo AS objective_id,
@@ -263,7 +263,6 @@ def query_8():
         ra_links rl2 ON o.id_objetivo = rl2.id_objetivo_prerequisito
     WHERE 
         rl1.id_objetivo IS NULL 
-        AND rl2.id_objetivo_prerequisito IS NULL
     """
 
     # Add filtering condition if the user has provided input for course name or ID
