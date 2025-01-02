@@ -205,6 +205,76 @@ def query_6():
     df = execute_query(query)
     show_results(df)
 
+# number of incoming and outgoing links for each course
+def query_7():
+    course_input = course_input_var.get().strip()  # Get the input from the text box
+    
+    base_query = """
+    SELECT 
+        c.id AS course_id, 
+        c.nombre AS course_name,
+        COALESCE(incoming_links.count, 0) AS incoming_links,
+        COALESCE(outgoing_links.count, 0) AS outgoing_links,
+        COALESCE(outgoing_links.count, 0) + COALESCE(incoming_links.count, 0) AS total_links
+    FROM 
+        courses c
+    LEFT JOIN (
+        SELECT 
+            id_prerequisito AS course_id, 
+            COUNT(*) AS count
+        FROM 
+            ra_links
+        GROUP BY 
+            id_prerequisito
+    ) incoming_links ON c.id = incoming_links.course_id
+    LEFT JOIN (
+        SELECT 
+            id AS course_id, 
+            COUNT(*) AS count
+        FROM 
+            ra_links
+        GROUP BY 
+            id
+    ) outgoing_links ON c.id = outgoing_links.course_id
+    """
+    
+    # Add filtering condition if the user has provided input for course name or ID
+    query=user_input(course_input,base_query, "WHERE", "c.")
+    query += "ORDER BY total_links DESC;"
+
+    df = execute_query(query)
+    show_results(df)
+
+def query_8():
+    course_input = course_input_var.get().strip()  # Get the input from the text box
+    base_query = """
+    SELECT 
+        c.nombre AS course_name,
+        c.id AS course_id,
+        o.id_objetivo AS objective_id,
+        o.objetivo AS objective_description
+    FROM 
+        objectives o
+    JOIN 
+        courses c ON o.id = c.id
+    LEFT JOIN 
+        ra_links rl1 ON o.id_objetivo = rl1.id_objetivo
+    LEFT JOIN 
+        ra_links rl2 ON o.id_objetivo = rl2.id_objetivo_prerequisito
+    WHERE 
+        rl1.id_objetivo IS NULL 
+        AND rl2.id_objetivo_prerequisito IS NULL
+    """
+
+    # Add filtering condition if the user has provided input for course name or ID
+    query = user_input(course_input, base_query, "AND", "c.")
+
+    query += " ORDER BY c.nombre, o.id_objetivo ASC;"
+
+    df = execute_query(query)
+    show_results(df)
+
+
 def create_ui():
     root = Tk()
     root.title("Database Query Interface")
@@ -239,10 +309,16 @@ def create_ui():
     button4.grid(row=2, column=1, padx=10, pady=10)
 
     button5 = Button(root, text="Number of Unlinked Objectives", command=query_5, width=40, height=2, font=("Arial", 12), relief="solid", bg="#4CAF50", fg="white")
-    button5.grid(row=3, column=0, columnspan=2, pady=10)
+    button5.grid(row=3, column=0, padx=10, pady=10)
 
     button6 = Button(root, text="Incoming and Outgoing Objective Links", command=query_6, width=40, height=2, font=("Arial", 12), relief="solid", bg="#4CAF50", fg="white")
-    button6.grid(row=4, column=0, columnspan=2, pady=10)
+    button6.grid(row=3, column=1, padx=10, pady=10)
+
+    button7 = Button(root, text="Critical Courses", command=query_7, width=40, height=2, font=("Arial", 12), relief="solid", bg="#4CAF50", fg="white")
+    button7.grid(row=4, column=0, padx=10, pady=10)
+
+    button8 = Button(root, text="Unlinked Objectives", command=query_8, width=40, height=2, font=("Arial", 12), relief="solid", bg="#4CAF50", fg="white")
+    button8.grid(row=4, column=1, padx=10, pady=10)
 
     # Entry field for user input (course name or ID)
     global course_input_var
