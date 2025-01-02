@@ -18,14 +18,15 @@ def connect_db():
         messagebox.showerror("Database Connection Error", f"Error connecting to the database: {e}")
         return None
 
-def user_input(data, base_query):
+# The modifier can be WHERE or AND, and the prefix is the table prefix for filtering, like c. is the prefix of c.id
+def user_input(data, base_query, modifier,prefix):
     if data:
-        if data.isdigit():
+        if "_" in data:
             # If the input is a number, filter by course ID (c.id)
-            query = f"{base_query} WHERE c.id = {data}"
+            query = f"{base_query} {modifier} {prefix}id = '{data}'"
         else:
             # Otherwise, filter by course name (c.nombre)
-            query = f"{base_query} WHERE c.nombre = '{data}'"
+            query = f"{base_query} {modifier} {prefix}nombre = '{data}'"
     else:
         query = base_query  # If no input, don't apply any filtering
     return query
@@ -92,23 +93,29 @@ def download_report():
 
 # Function for each predefined query
 def query_1():
-    query = """
-    SELECT nombre, id FROM courses;
+    course_input = course_input_var.get().strip()  # Get the input from the text box
+    base_query = """
+    SELECT nombre, id FROM courses
     """
+    query=user_input(course_input,base_query, "WHERE", "")
     df = execute_query(query)
     show_results(df)
 
 def query_2():
-    query = """
-    SELECT nombre, id_objetivo, objetivo FROM objectives;
+    course_input = course_input_var.get().strip()  # Get the input from the text box
+    base_query = """
+    SELECT nombre, id_objetivo, objetivo FROM objectives
     """
+    query=user_input(course_input,base_query, "WHERE", "")
     df = execute_query(query)
     show_results(df)
 
 def query_3():
-    query = """
-    SELECT r.id, r.id_requisito FROM requirements r;
+    course_input = course_input_var.get().strip()  # Get the input from the text box
+    base_query = """
+    SELECT r.id, r.id_requisito FROM requirements r JOIN courses c ON c.id=r.id
     """
+    query=user_input(course_input,base_query, "WHERE", "c.")
     df = execute_query(query)
     show_results(df)
 
@@ -135,7 +142,7 @@ def query_4():
         objectives oo ON rl.id_objetivo_prerequisito = oo.id_objetivo
     """
     
-    query=user_input(course_input,base_query)
+    query=user_input(course_input,base_query, "WHERE", "c.")
 
     df = execute_query(query)
     show_results(df)
@@ -162,7 +169,7 @@ def query_5():
     """
     
     # Add filtering condition if the user has provided input for course name or ID
-    query=user_input(course_input,base_query)
+    query=user_input(course_input,base_query, "AND", "c.")
 
     query += " GROUP BY c.nombre ORDER BY cantidad_obj DESC;"
 
@@ -193,7 +200,7 @@ def query_6():
     """
     
     # Add filtering condition if the user has provided input for course name or ID
-    query=user_input(course_input,base_query)
+    query=user_input(course_input,base_query, "WHERE", "c.")
 
     df = execute_query(query)
     show_results(df)

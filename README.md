@@ -137,6 +137,15 @@ This folder includes two tools:
 
 ---
 
+### 10. **Hoja TDT**
+- **Purpose:** Automates the creation of the TDT sheet by using the other sheets via multiple macros.
+- **How It Works:**
+  - Reads data from multiple sheets and uses an ID (RUT) to cross reference data.
+  - Supports undoing changes if there is any mistake.
+  - Highlights in red any unmatched rows via ID.
+
+---
+
 ## Get Started
 1. Clone this repository to your local machine.
 2. Refer to each tool’s folder for detailed instructions and code files.
