@@ -1,7 +1,7 @@
 
 # Curricular Analyst UA - Database Loaders
 
-This project contains scripts for loading various data into the database. The four essential Python scripts in this folder are designed to handle the insertion of key curricular data such as general details, objectives, requirements, and links. 
+This project contains scripts for loading various data into the database. The four essential Python scripts in this folder are designed to handle the insertion of key curricular data such as general details, objectives, requirements, and links. Consider that if this tables are already in the database, they should be deleted before running the code.
 
 **Scripts Overview:**
 1. **`general_loader.py`**  

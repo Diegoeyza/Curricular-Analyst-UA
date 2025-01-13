@@ -31,6 +31,14 @@ def user_input(data, base_query, modifier,prefix):
         query = base_query  # If no input, don't apply any filtering
     return query
 
+#Lets the user add a full new condition
+def user_input2(data, base_query, modifier,condition):
+    if data:
+            query = f"{base_query} {modifier} {condition} '{data}'"
+    else:
+        query = base_query  # If no input, don't apply any filtering
+    return query
+
 
 # Function to execute queries
 def execute_query(query):
@@ -127,8 +135,8 @@ def query_4():
     SELECT 
         c.nombre AS curso,
         o.objetivo AS objetivo,
-        ro.nombre AS prerequisito,
-        oo.objetivo AS objetivo_prerequisito,
+        ro.nombre AS prerrequisito,
+        oo.objetivo AS objetivo_prerrequisito,
         rl.importancia
     FROM 
         ra_links rl
@@ -137,9 +145,9 @@ def query_4():
     JOIN 
         objectives o ON rl.id_objetivo = o.id_objetivo
     JOIN 
-        courses ro ON rl.id_prerequisito = ro.id
+        courses ro ON rl.id_prerrequisito = ro.id
     JOIN 
-        objectives oo ON rl.id_objetivo_prerequisito = oo.id_objetivo
+        objectives oo ON rl.id_objetivo_prerrequisito = oo.id_objetivo
     """
     
     query=user_input(course_input,base_query, "WHERE", "c.")
@@ -162,10 +170,10 @@ def query_5():
     LEFT JOIN 
         ra_links rl1 ON o.id_objetivo = rl1.id_objetivo
     LEFT JOIN 
-        ra_links rl2 ON o.id_objetivo = rl2.id_objetivo_prerequisito
+        ra_links rl2 ON o.id_objetivo = rl2.id_objetivo_prerrequisito
     WHERE 
         rl1.id_objetivo IS NULL 
-        AND rl2.id_objetivo_prerequisito IS NULL
+        AND rl2.id_objetivo_prerrequisito IS NULL
     """
     
     # Add filtering condition if the user has provided input for course name or ID
@@ -184,8 +192,8 @@ def query_6():
     SELECT 
         c.nombre AS curso,
         o.objetivo AS objetivo,
-        ro.nombre AS prerequisito,
-        oo.objetivo AS objetivo_prerequisito,
+        ro.nombre AS prerrequisito,
+        oo.objetivo AS objetivo_prerrequisito,
         rl.importancia
     FROM 
         ra_links rl
@@ -194,13 +202,14 @@ def query_6():
     JOIN 
         objectives o ON rl.id_objetivo = o.id_objetivo
     JOIN 
-        courses ro ON rl.id_prerequisito = ro.id
+        courses ro ON rl.id_prerrequisito = ro.id
     JOIN 
-        objectives oo ON rl.id_objetivo_prerequisito = oo.id_objetivo
+        objectives oo ON rl.id_objetivo_prerrequisito = oo.id_objetivo
     """
     
     # Add filtering condition if the user has provided input for course name or ID
     query=user_input(course_input,base_query, "WHERE", "c.")
+    query=user_input2(course_input,query, "OR", "rl.id_prerrequisito =")
 
     df = execute_query(query)
     show_results(df)
@@ -220,12 +229,12 @@ def query_7():
         courses c
     LEFT JOIN (
         SELECT 
-            id_prerequisito AS course_id, 
+            id_prerrequisito AS course_id, 
             COUNT(*) AS count
         FROM 
             ra_links
         GROUP BY 
-            id_prerequisito
+            id_prerrequisito
     ) incoming_links ON c.id = incoming_links.course_id
     LEFT JOIN (
         SELECT 
@@ -260,7 +269,7 @@ def query_8():
     LEFT JOIN 
         ra_links rl1 ON o.id_objetivo = rl1.id_objetivo
     LEFT JOIN 
-        ra_links rl2 ON o.id_objetivo = rl2.id_objetivo_prerequisito
+        ra_links rl2 ON o.id_objetivo = rl2.id_objetivo_prerrequisito
     WHERE 
         rl1.id_objetivo IS NULL 
     """

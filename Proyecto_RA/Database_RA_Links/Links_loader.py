@@ -43,7 +43,7 @@ def load_ra_links_from_csv(csv_file):
                 cur.execute(
                     """
                     INSERT INTO RA_Links (
-                        ID, ID_Objetivo, Importancia, ID_Prerequisito, ID_Objetivo_Prerequisito
+                        ID, ID_Objetivo, Importancia, ID_Prerrequisito, ID_Objetivo_Prerrequisito
                     ) VALUES (%s, %s, %s, %s, %s)
                     """,
                     (
@@ -59,14 +59,14 @@ def load_ra_links_from_csv(csv_file):
                 conn.rollback()
                 print(
                     f"Primary Key violation for row {row}: A record with the same combination of "
-                    f"(ID, ID_Objetivo, ID_Prerequisito, ID_Objetivo_Prerequisito) already exists. Details: {e}"
+                    f"(ID, ID_Objetivo, ID_Prerrequisito, ID_Objetivo_Prerrequisito) already exists. Details: {e}"
                 )
                 error_count += 1
             except psycopg2.errors.ForeignKeyViolation as e:
                 conn.rollback()
                 print(
                     f"Foreign Key violation for row {row}: Either ID={row[0]}, ID_Objetivo={row[1]}, "
-                    f"ID_Prerequisito={row[3]}, or ID_Objetivo_Prerequisito={row[4]} does not exist in the corresponding table. Details: {e}"
+                    f"ID_Prerrequisito={row[3]}, or ID_Objetivo_Prerrequisito={row[4]} does not exist in the corresponding table. Details: {e}"
                 )
                 error_count += 1
             except psycopg2.IntegrityError as e:
@@ -86,7 +86,7 @@ def load_ra_links_from_csv(csv_file):
     print(f"Total rows successfully inserted: {count2}")
 
 # Example usage
-csv_file = r"Curricular-Analyst-UA\Análisis_curricular\Database RA_Links\RA_Links.csv"  # Path to your CSV file
+csv_file = r"C:\Users\diego\Downloads\RA Uandes Mat Full - RA_Links.csv"  # Path to your CSV file
 load_ra_links_from_csv(csv_file)
 
 # Close the connection
